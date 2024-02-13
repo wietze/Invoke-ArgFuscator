@@ -64,8 +64,10 @@ function Parse-Json {
 
         # Show final result
         $Output = $tokens[0]
-        ForEach ($Index in (1..($Tokens.Count - 1))) {
-            $Output = -join ($Output, $(if (($Tokens[$Index - 1].Type -eq "argument" -or $Tokens[$Index - 1].Type -eq "value") -and ($Tokens[$Index - 1].TokenContent[-1] -eq "=")) { "" } else { " " }), ($Tokens[$Index].ToString()))
+        if($Tokens.length -gt 0){
+            ForEach ($Index in (1..($Tokens.Count - 1))) {
+                $Output = -join ($Output, $(if (($Tokens[$Index - 1].Type -eq "argument" -or $Tokens[$Index - 1].Type -eq "value") -and ($Tokens[$Index - 1].TokenContent[-1] -eq "=")) { "" } else { " " }), ($Tokens[$Index].ToString()))
+            }
         }
 
         Write-Host($Output);

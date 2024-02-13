@@ -4,6 +4,7 @@ class Modifier {
     [string[]]$ExcludedTypes;
     static [char]$SeparationChar = ' ';
     static [char[]]$QuoteChars = @('"', '''');
+    static [string[]]$ValueChars = $("=", ":");
 
     Modifier([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes) {
         $this.InputCommandTokens = $InputCommandTokens;
