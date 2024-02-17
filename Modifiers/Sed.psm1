@@ -25,9 +25,9 @@ class Sed : Modifier {
                     while ($Instance -ge 0) {
                         $Replacement = [Modifier]::ChooseRandom($Match.Replace);
                         if ([Modifier]::CoinFlip($this.Probability)) {
-                            $NewTokenContent = $NewTokenContent.Substring(0, $instance) + $Replacement + $NewTOkenContent.substring($instance + $match.Find.length);
+                            $NewTokenContent = $NewTokenContent.Substring(0, $instance) + $Replacement + $NewTokenContent.substring($instance + $match.Find.length);
                         }
-                        $instance = $NewTokenContent.IndexOf($Match.Find, $instance + $Replacement.Length);
+                        $instance = $NewTokenContent.IndexOf($Match.Find, [math]::Min($instance + $Replacement.Length, $NewTokenContent.Length));
                     }
                 }
                 $Token.TokenContent = $NewTokenContent.ToCharArray()

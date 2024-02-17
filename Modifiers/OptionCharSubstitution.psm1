@@ -18,6 +18,3 @@ class OptionCharSubstitution : Modifier {
         }
     }
 }
-
-
-

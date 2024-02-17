@@ -13,8 +13,8 @@ class SedStatement {
 
     [int32]StringIndex([string]$Content){
         if($this.CaseInsensitive){
-            return $Content.ToUpper().IndexOf($This.Find.ToUpper());
+            return $Content.ToUpper().IndexOf($this.Find.ToUpper());
         }
-        return $Content.IndexOf($This.Find);
+        return $Content.IndexOf($this.Find);
     }
 }
