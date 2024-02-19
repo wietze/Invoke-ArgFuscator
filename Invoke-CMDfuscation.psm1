@@ -1,12 +1,13 @@
 using module "Types\Token.psm1"
-using module "Modifiers\QuoteInsertion.psm1"
 using module "Modifiers\CharacterInsertion.psm1"
-using module "Modifiers\RandomCase.psm1"
-using module "Modifiers\OptionCharSubstitution.psm1"
-using module "Modifiers\Sed.psm1"
 using module "Modifiers\FilePathTransformer.psm1"
-using module "Modifiers\UrlTransformer.psm1"
+using module "Modifiers\OptionCharSubstitution.psm1"
+using module "Modifiers\QuoteInsertion.psm1"
+using module "Modifiers\RandomCase.psm1"
 using module "Modifiers\Regex.psm1"
+using module "Modifiers\Sed.psm1"
+using module "Modifiers\Shorthands.psm1"
+using module "Modifiers\UrlTransformer.psm1"
 
 param (
     [Parameter(Mandatory = $true)][string]$InputFile,

@@ -8,10 +8,8 @@ class UrlTransformer : Modifier {
     [boolean]$SubstituteSlashes;
     [boolean]$IpToHex;
     [boolean]$PathTraversal;
-    $keywords = @("debug", "system32", "compile", "winsxs", "temp", "update")
 
-    UrlTransformer([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [boolean]$LeaveOutProtocol, [boolean]$LeaveOutDoubleSlashes, [boolean]$SubstituteSlashes, [boolean]$IpToHex, [boolean]$PathTraversal) : base($InputCommandTokens, $ExcludedTypes) {
-        $this.Probability = $Probability;
+    UrlTransformer([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [boolean]$LeaveOutProtocol, [boolean]$LeaveOutDoubleSlashes, [boolean]$SubstituteSlashes, [boolean]$IpToHex, [boolean]$PathTraversal) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
         $this.LeaveOutProtocol = $LeaveOutProtocol;
         $this.SubstituteSlashes = $SubstituteSlashes;
         $this.IpToHex = $IpToHex;
@@ -35,7 +33,7 @@ class UrlTransformer : Modifier {
                     $NewTokenContent = [regex]::replace($NewTokenContent, "([^/])([/])([^/])", {
                             $slash = $args[0].groups[2].value;
                             if ([Modifier]::CoinFlip($this.Probability)) {
-                                $subpath = $slash + [Modifier]::ChooseRandom($this.Keywords) + $slash + ".." + $slash;
+                                $subpath = $slash + [Modifier]::ChooseRandom([Modifier]::Keywords) + $slash + ".." + $slash;
                                 return $args[0].groups[1].value + $subpath + $args[0].groups[3].value;
                             }
                             return $args[0].groups[0].value;

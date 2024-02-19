@@ -5,7 +5,7 @@ class OptionCharSubstitution : Modifier {
     [char]$ProvidedOptionChar;
     [char[]]$OutputOptionChars;
 
-    OptionCharSubstitution([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [char]$ProvidedOptionChar, [char[]]$OutputOptionChars) : base($InputCommandTokens, $ExcludedTypes) {
+    OptionCharSubstitution([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [bool]$Probability, [char]$ProvidedOptionChar, [char[]]$OutputOptionChars) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
         $this.ProvidedOptionChar = $ProvidedOptionChar;
         $this.OutputOptionChars = $OutputOptionChars;
     }

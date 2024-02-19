@@ -7,8 +7,7 @@ class RegularExpression : Modifier {
     [string]$RegexMatch;
     [string]$RegexReplace;
 
-    RegularExpression([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [string]$RegexMatch, [string]$RegexReplace, [boolean]$CaseSensitive) : base($InputCommandTokens, $ExcludedTypes) {
-        $this.Probability = $Probability;
+    RegularExpression([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [string]$RegexMatch, [string]$RegexReplace, [boolean]$CaseSensitive) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
         $this.RegexMatch = $RegexMatch;
         if(!$CaseSensitive){
             $this.RegexMatch = "(?i)"+ $this.RegexMatch;

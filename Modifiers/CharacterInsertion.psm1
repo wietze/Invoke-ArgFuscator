@@ -6,8 +6,7 @@ class CharacterInsertion : Modifier {
     [char[]]$Characters;
     [int]$Offset;
 
-    CharacterInsertion([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [string[]]$Characters, [int]$Offset) : base($InputCommandTokens, $ExcludedTypes) {
-        $this.Probability = $Probability;
+    CharacterInsertion([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [string[]]$Characters, [int]$Offset) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
         $this.Characters = $Characters;
         $this.Offset = $Offset;
     }

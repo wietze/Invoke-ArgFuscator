@@ -6,11 +6,10 @@ class Sed : Modifier {
     [float]$Probability;
     [SedStatement[]]$SedStatements;
 
-    Sed([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [string]$SedStatements) : base($InputCommandTokens, $ExcludedTypes) {
-        $this.Probability = $Probability;
+    Sed([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [string]$SedStatements) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
         $this.SedStatements = @();
         $SedStatements.Split("`n") | Where-Object { $null -ne $_ } | Foreach-Object {
-            $this.SedStatements += (New-Object SedStatement -ArgumentList $($_))
+            $this.SedStatements += (New-Object SedStatement -ArgumentList @($_))
         }
     }
 
@@ -27,7 +26,7 @@ class Sed : Modifier {
                         if ([Modifier]::CoinFlip($this.Probability)) {
                             $NewTokenContent = $NewTokenContent.Substring(0, $instance) + $Replacement + $NewTokenContent.substring($instance + $match.Find.length);
                         }
-                        $instance = $NewTokenContent.IndexOf($Match.Find, [math]::Min($instance + $Replacement.Length, $NewTokenContent.Length));
+                        $instance = $NewTokenContent.IndexOf($Match.Find, [Math]::Min($instance + $Replacement.Length, $NewTokenContent.Length));
                     }
                 }
                 $Token.TokenContent = $NewTokenContent.ToCharArray()

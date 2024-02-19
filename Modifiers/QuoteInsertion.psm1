@@ -5,8 +5,8 @@ class QuoteInsertion : Modifier {
     [float]$Probability;
     static [char]$QuoteChar = '"';
 
-    QuoteInsertion([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability) : base($InputCommandTokens, $ExcludedTypes) {
-        $this.Probability = $Probability;
+    QuoteInsertion([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
+
     }
 
     [void]GenerateOutput() {
