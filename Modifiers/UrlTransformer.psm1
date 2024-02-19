@@ -30,14 +30,14 @@ class UrlTransformer : Modifier {
                 if ($this.PathTraversal) {
                     [int]$i = 0;
                     do {
-                    $NewTokenContent = [regex]::replace($NewTokenContent, "([^/])([/])([^/])", {
-                            $slash = $args[0].groups[2].value;
-                            if ([Modifier]::CoinFlip($this.Probability)) {
-                                $subpath = $slash + [Modifier]::ChooseRandom([Modifier]::Keywords) + $slash + ".." + $slash;
-                                return $args[0].groups[1].value + $subpath + $args[0].groups[3].value;
-                            }
-                            return $args[0].groups[0].value;
-                        });
+                        $NewTokenContent = [regex]::replace($NewTokenContent, "([^/])([/])([^/])", {
+                                $slash = $args[0].groups[2].value;
+                                if ([Modifier]::CoinFlip($this.Probability)) {
+                                    $subpath = $slash + [Modifier]::ChooseRandom([Modifier]::Keywords) + $slash + ".." + $slash;
+                                    return $args[0].groups[1].value + $subpath + $args[0].groups[3].value;
+                                }
+                                return $args[0].groups[0].value;
+                            });
                         $i++;
                     } while ([Modifier]::CoinFlip($this.Probability * [Math]::Pow(0.9, $i)));
                 }
@@ -69,7 +69,7 @@ class UrlTransformer : Modifier {
                                 return $decimal;
                             }
                             else {
-                                return '0x{0:x}'-f $decimal;
+                                return '0x{0:x}' -f $decimal;
                             }
                         })
                 }

@@ -11,14 +11,9 @@ using module "Modifiers\UrlTransformer.psm1"
 
 param (
     [Parameter(Mandatory = $true)][string]$InputFile,
-    [int]$n
+    [int]$n=1
 )
 function Parse-Json {
-    param (
-        [Parameter(Mandatory = $true)][string]$InputFile,
-        [int]$n = 1
-    )
-
     $JSONData = Get-Content -Path $InputFile | ConvertFrom-Json;
     $ErrorModifiers = @();
     for ($i = 0; $i -lt $n; $i++) {
@@ -41,9 +36,6 @@ function Parse-Json {
                 }
                 continue
             }
-
-            # Dynamically import Class
-            #Import-Module -Name (".\Modifiers\" + $ModifierName + ".psm1") -Verbose;
 
             # Create dictionary with arguments and values
             $ModifierArguments = @{InputCommandTokens = [Token[]]$Tokens; ExcludedTypes = [string[]]@() };

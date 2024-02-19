@@ -23,7 +23,7 @@ class Shorthands : Modifier {
             for ($i = 1; $i -lt $command.length; $i++) {
                 $command_shortened = $command.substring(0, $i);
                 if (!(($command_other_s | ForEach-Object { ($i -lt $_.length) -and ($_.substring(0, $i) -eq $command_shortened) }) -contains $true)) {
-                    $options = ($i..($command.length-$suffix.length)) | ForEach-Object { $command.substring(0, $_) + $suffix };
+                    $options = ($i..($command.length - $suffix.length)) | ForEach-Object { $command.substring(0, $_) + $suffix };
                     $this.Substitutions.Add($command, $options);
                     $options | ForEach-Object { $this.Substitutions[$_] = $options }
                     break;
