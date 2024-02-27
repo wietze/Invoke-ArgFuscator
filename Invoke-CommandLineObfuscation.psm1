@@ -9,12 +9,44 @@ using module "Modifiers\Sed.psm1"
 using module "Modifiers\Shorthands.psm1"
 using module "Modifiers\UrlTransformer.psm1"
 
-param (
-    [Parameter(Mandatory = $true)][string]$InputFile,
-    [int]$n=1
-)
-function Parse-Json {
-    $JSONData = Get-Content -Path $InputFile | ConvertFrom-Json;
+$OutputEncoding = [ System.Text.Encoding]::UTF8
+function Invoke-CommandLineObfuscation {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ if ((Test-Path $_ -PathType 'Leaf') -and ((Get-Item $_ | Select-Object -Expand Extension) -eq ".json" )) {
+                    return $true
+                }
+                else {
+                    throw "Make sure the file exists, and has a '.json' extension."
+                } })]
+        [string]$InputFile,
+        [int]$n = 1
+    )
+    <#
+    .SYNOPSIS
+    Obfuscates a command provided in a JSON-formatted configuration file.
+
+    .DESCRIPTION
+    Obfuscates a command provided in a JSON-formatted configuration file by applying specified obfuscation options to the provided command.
+
+    .PARAMETER InputFile
+    Specifies the path to the JSON-formatted config file.
+
+    .PARAMETER n
+    Specifies the number of obfuscated commands to generate. Default value is 1.
+
+    .EXAMPLE
+    PS> Invoke-CommandLineObfuscation some_config.json 5
+
+    .LINK
+    https://www.twitter.com/wietze
+
+    .LINK
+    https://www.github.com/wietze
+#>
+
+    $JSONData = Get-Content -Encoding UTF8 -Path $InputFile | ConvertFrom-Json;
     $ErrorModifiers = @();
     for ($i = 0; $i -lt $n; $i++) {
         $Tokens = [System.Collections.ArrayList]@();
@@ -26,7 +58,7 @@ function Parse-Json {
 
 
         foreach ($modifier_params in $JSONData.modifiers.PSObject.Properties) {
-            $ModifierName = $modifier_params.Name -replace "^(?i)regex$","RegularExpression"; # Regex is a reserved name, hence this rename for the Modifier class
+            $ModifierName = $modifier_params.Name -replace "^(?i)regex$", "RegularExpression"; # Regex is a reserved name, hence this rename for the Modifier class
             $Modifier = ($ModifierName -as [type])
 
             if ($null -eq $Modifier) {
@@ -42,7 +74,8 @@ function Parse-Json {
             foreach ($param in $modifier_params.Value.PSObject.Properties) {
                 if ($ModifierArguments.ContainsKey($param.Name)) {
                     $ModifierArguments[$param.Name] = $param.Value;
-                } else {
+                }
+                else {
                     $ModifierArguments.Add($param.Name, $param.Value) | Out-Null;
                 }
             }
@@ -60,14 +93,12 @@ function Parse-Json {
 
         # Show final result
         $Output = $tokens[0]
-        if($Tokens.Count -gt 1){
+        if ($Tokens.Count -gt 1) {
             ForEach ($Index in (1..($Tokens.Count - 1))) {
                 $Output = -join ($Output, $(if (($Tokens[$Index - 1].Type -eq "argument" -or $Tokens[$Index - 1].Type -eq "value") -and ($Tokens[$Index - 1].TokenContent[-1] -eq "=")) { "" } else { " " }), ($Tokens[$Index].ToString()))
             }
         }
 
-        Write-Host($Output);
+        return $Output.ToString();
     }
 }
-
-Parse-Json $InputFile $n;

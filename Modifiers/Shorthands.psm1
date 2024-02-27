@@ -15,7 +15,7 @@ class Shorthands : Modifier {
         $Commands | Where-Object { $null -ne $_ } | Foreach-Object {
             $command = $_
             if ($command.length -le 1) { return; }
-            $suffix = [Modifier]::ValueChars -contains $command[-1] ? $command[-1] : "";
+            $suffix = ($command[-1], "")[!([Modifier]::ValueChars -contains $command[-1])];
 
             $command_other_s = [System.Collections.Generic.HashSet[string]]$Commands;
             $command_other_s.Remove($command);

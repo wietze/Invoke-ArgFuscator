@@ -13,7 +13,7 @@ class RandomCase : Modifier {
                 $NewTokenContent = [System.Collections.ArrayList]@();
                 foreach ($Char in $Token.TokenContent) {
                     if ([Modifier]::CoinFlip($this.Probability)) {
-                        $NewTokenContent.Add([char]($Char.ToString().ToUpper() -eq $Char.ToString() ? $char.ToString().ToUpper() : $char.ToString().ToLower()));
+                        $NewTokenContent.Add([char](($char.ToString().ToUpper(), $char.ToString().ToLower())[!($Char.ToString().ToUpper() -eq $Char.ToString())]));
                     }
                     else {
                         $NewTokenContent.Add($char);
