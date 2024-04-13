@@ -10,7 +10,7 @@ using module "Modifiers\Shorthands.psm1"
 using module "Modifiers\UrlTransformer.psm1"
 
 $OutputEncoding = [ System.Text.Encoding]::UTF8
-function Invoke-CommandLineObfuscation {
+function Invoke-ArgFuscator {
     [CmdletBinding()]
     Param (
         [Parameter(Mandatory = $true)]
@@ -37,13 +37,13 @@ function Invoke-CommandLineObfuscation {
     Specifies the number of obfuscated commands to generate. Default value is 1.
 
     .EXAMPLE
-    PS> Invoke-CommandLineObfuscation some_config.json 5
+    PS> Invoke-Argfuscator some_config.json 5
 
     .LINK
     https://www.twitter.com/wietze
 
     .LINK
-    https://www.github.com/wietze
+    https://www.github.com/wietze/Invoke-Argfuscator
 #>
 
     $JSONData = Get-Content -Encoding UTF8 -Path $InputFile | ConvertFrom-Json;
@@ -99,6 +99,6 @@ function Invoke-CommandLineObfuscation {
             }
         }
 
-        return $Output.ToString();
+        Write-Output $Output.ToString();
     }
 }

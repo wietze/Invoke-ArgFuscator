@@ -1,4 +1,4 @@
-Import-Module ./Invoke-CommandLineObfuscation.psm1
+Import-Module ./Invoke-ArgFuscator.psm1
 
 $n_default = 1
 if($args.Length -eq 0){
@@ -25,4 +25,4 @@ if($args.Length -eq 0){
     }
 }
 
-Invoke-CommandLineObfuscation -InputFile $InputFile -n $n
+Invoke-ArgFuscator -InputFile $InputFile -n $n
