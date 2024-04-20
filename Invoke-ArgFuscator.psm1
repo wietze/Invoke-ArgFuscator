@@ -50,10 +50,15 @@ function Invoke-ArgFuscator {
     $ErrorModifiers = @();
     for ($i = 0; $i -lt $n; $i++) {
         $Tokens = [System.Collections.ArrayList]@();
+        $OriginalTokens = [System.Collections.ArrayList]@();
         foreach ($type_value in $JSONData.command) {
             $Token = [Token]::new($type_value.PSObject.Properties.Value.ToCharArray());
             $Token.Type = $type_value.PSObject.Properties.Name;
             $Tokens.Add($Token) | Out-Null;
+
+            $Token = [Token]::new($type_value.PSObject.Properties.Value.ToCharArray());
+            $Token.Type = $type_value.PSObject.Properties.Name;
+            $OriginalTokens.Add($Token) | Out-Null;
         }
 
 
@@ -95,7 +100,7 @@ function Invoke-ArgFuscator {
         $Output = $tokens[0]
         if ($Tokens.Count -gt 1) {
             ForEach ($Index in (1..($Tokens.Count - 1))) {
-                $Output = -join ($Output, $(if (($Tokens[$Index - 1].Type -eq "argument" -or $Tokens[$Index - 1].Type -eq "value") -and ($Tokens[$Index - 1].TokenContent[-1] -eq "=")) { "" } else { " " }), ($Tokens[$Index].ToString()))
+                $Output = -join ($Output, $(if (($Tokens[$Index - 1].Type -eq "argument" -or $Tokens[$Index - 1].Type -eq "value") -and ($OriginalTokens[$Index - 1].TokenContent[-1] -match '[=:]')) { "" } else { " " }), ($Tokens[$Index].ToString()))
             }
         }
 

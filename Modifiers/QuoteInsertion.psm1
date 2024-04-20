@@ -17,14 +17,13 @@ class QuoteInsertion : Modifier {
             if (!$this.ExcludedTypes.Contains($Token.Type)) {
                 $Content = $Token.ToString();
                 foreach ($Char in $Token.TokenContent) {
+                    $nextChar = if ($index -lt $Content.Length) { $Content[$index+1] } else { "" }
                     $NewTokenContent.Add($Char);
                     if ([Modifier]::CoinFlip($this.Probability) -and `
                             ( ( $Content[-1] -ne [QuoteInsertion]::QuoteChar ) `
-                            -or ( ($index -gt 0) -and `
-                            ($Char -match '^[a-zA-Z0-9]$') -and `
-                            ($index -lt ($Content.Length - 2)) -and `
-                            ($Content[$index+1] -match '^[a-zA-Z0-9]$')) `
-                    )){
+                            -or ( ($index -gt 0) -and ($index -lt ($Content.Length - 1)))) `
+                            -and ($Char -match '^[a-zA-Z0-9\-\/]$') -and ($nextChar -match '^[a-zA-Z0-9\-\/]{0,1}$') `
+                    ){
                         $NewTokenContent.Add([QuoteInsertion]::QuoteChar);
                         $i++;
                     }
@@ -46,12 +45,12 @@ class QuoteInsertion : Modifier {
                     }
                 }
 
-
                 # Edge case: Check if we added a quote after a value char
-                if (($NewTokenContent[-1] -eq [QuoteInsertion]::QuoteChar) -and ([Modifier]::ValueChars.Contains($NewTokenContent[-2]))) {
+                if (($NewTokenContent[-1] -eq [QuoteInsertion]::QuoteChar) -and (([Modifier]::ValueChars) -contains ($NewTokenContent[-2]))) {
                     $NewTokenContent.RemoveAt($NewTokenContent.Count - 1); # Remove the final quote (leaving it may cause issues)
                     $NewTokenContent.RemoveAt($NewTokenContent.lastIndexOf([QuoteInsertion]::QuoteChar)); # Also remove the right-most quote character to balance the number of quotes out again
                 }
+
 
                 $Token.TokenContent = $NewTokenContent;
             }
