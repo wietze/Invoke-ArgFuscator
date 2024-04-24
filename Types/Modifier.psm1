@@ -1,7 +1,7 @@
 using module ".\Token.psm1"
 class Modifier {
     [Token[]]$InputCommandTokens;
-    [string[]]$ExcludedTypes;
+    [string[]]$ExcludedTypes = $("disabled");
     [bool]$Probability;
     static [char]$SeparationChar = ' ';
     static [char[]]$QuoteChars = @('"', '''');
@@ -11,7 +11,7 @@ class Modifier {
 
     Modifier([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability) {
         $this.InputCommandTokens = $InputCommandTokens;
-        $this.ExcludedTypes = $ExcludedTypes;
+        $this.ExcludedTypes += $ExcludedTypes;
         $this.Probability = $Probability;
     }
 

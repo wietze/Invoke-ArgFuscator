@@ -9,50 +9,47 @@ class QuoteInsertion : Modifier {
 
     }
 
+    [string[]]AddQuotes([string[]]$Token){
+        $NewTokenContent = [System.Collections.ArrayList]@();
+        $index = 0;
+        # if([Modifier]::CoinFlip($this.Probability)){
+        #     $NewTokenContent.Add([QuoteInsertion]::QuoteChar);
+        # }
+        foreach ($Char in $Token) {
+            $nextChar = if ($index -lt ($Token.Length)) { $Token[$index+1] } else { "" }
+
+            $NewTokenContent.Add($Char);
+
+
+            if ([Modifier]::CoinFlip($this.Probability) `
+                -and ($Char -match '^[a-zA-Z0-9\-\/]$') -and ($nextChar -match '^[a-zA-Z0-9\-\/]{0,1}$') `
+                    ){
+                        $NewTokenContent.Add([QuoteInsertion]::QuoteChar);
+                    }
+            $index++;
+
+        }
+
+        if(((($Token|where{$_-eq[QuoteInsertion]::QuoteChar})).length %2) -ne ((($NewTokenContent|where{$_-eq[QuoteInsertion]::QuoteChar})).length %2)){
+            $j = -1;
+            $NewTokenContent|foreach{$i=0}{if($_-eq[QuoteInsertion]::QuoteChar){$j=$i} $i++};
+
+            $NewTokenContent.RemoveAt($j);
+        }
+
+        return $NewTokenContent;
+    }
+
     [void]GenerateOutput() {
         foreach ($Token in $this.InputCommandTokens) {
             $NewTokenContent = [System.Collections.ArrayList]@();
             $i = 0;
             $index = 0;
             if (!$this.ExcludedTypes.Contains($Token.Type)) {
-                $Content = $Token.ToString();
-                foreach ($Char in $Token.TokenContent) {
-                    $nextChar = if ($index -lt $Content.Length) { $Content[$index+1] } else { "" }
-                    $NewTokenContent.Add($Char);
-                    if ([Modifier]::CoinFlip($this.Probability) -and `
-                            ( ( $Content[-1] -ne [QuoteInsertion]::QuoteChar ) `
-                            -or ( ($index -gt 0) -and ($index -lt ($Content.Length - 1)))) `
-                            -and ($Char -match '^[a-zA-Z0-9\-\/]$') -and ($nextChar -match '^[a-zA-Z0-9\-\/]{0,1}$') `
-                    ){
-                        $NewTokenContent.Add([QuoteInsertion]::QuoteChar);
-                        $i++;
-                    }
-                    $index++;
-                }
+                $parts = $Token.ToString().split(" ");
 
-                # Check if there are unbalanced quotes
-                if (($i % 2) -ne 0) {
-                    if ($NewTokenContent[-1] -eq [QuoteInsertion]::QuoteChar) {
-                        if ($content[-1] -eq [QuoteInsertion]::QuoteChar) {
-                            # Original token ended with quote, find the penultimate one
-                            $NewTokenContent.RemoveAt(($NewTokenContent[0..($NewTokenContent.Count - 2)] -join '').lastIndexOf([QuoteInsertion]::QuoteChar));
-                        } else {
-                            $NewTokenContent.RemoveAt($NewTokenContent.Count - 1);
-                        }
-                    }
-                    else {
-                        $NewTokenContent.Add([QuoteInsertion]::QuoteChar);
-                    }
-                }
-
-                # Edge case: Check if we added a quote after a value char
-                if (($NewTokenContent[-1] -eq [QuoteInsertion]::QuoteChar) -and (([Modifier]::ValueChars) -contains ($NewTokenContent[-2]))) {
-                    $NewTokenContent.RemoveAt($NewTokenContent.Count - 1); # Remove the final quote (leaving it may cause issues)
-                    $NewTokenContent.RemoveAt($NewTokenContent.lastIndexOf([QuoteInsertion]::QuoteChar)); # Also remove the right-most quote character to balance the number of quotes out again
-                }
-
-
-                $Token.TokenContent = $NewTokenContent;
+                $Token.TokenContent = ($parts|foreach{$this.AddQuotes($_.ToCharArray()) -join ""}) -join " "
+                ;
             }
         }
     }
