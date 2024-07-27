@@ -9,34 +9,34 @@ class QuoteInsertion : Modifier {
 
     }
 
-    [string[]]AddQuotes([string[]]$Token){
+    [string[]]AddQuotes([string[]]$Token) {
         $NewTokenContent = [System.Collections.ArrayList]@();
         $index = 0;
         # if([Modifier]::CoinFlip($this.Probability)){
         #     $NewTokenContent.Add([QuoteInsertion]::QuoteChar);
         # }
         foreach ($Char in $Token) {
-            $nextChar = if ($index -lt ($Token.Length)) { $Token[$index+1] } else { "" }
+            $nextChar = if ($index -lt ($Token.Length)) { $Token[$index + 1] } else { "" }
 
             $NewTokenContent.Add($Char);
 
 
             if ([Modifier]::CoinFlip($this.Probability) `
-                -and ($Char -match '^[a-zA-Z0-9\-\/]$') -and ($nextChar -match '^[a-zA-Z0-9\-\/]{0,1}$') `
-                    ){
-                        $NewTokenContent.Add([QuoteInsertion]::QuoteChar);
-                    }
+                    -and ($Char -match '^[a-zA-Z0-9\-\/]$') -and ($nextChar -match '^[a-zA-Z0-9\-\/]{0,1}$') `
+            ) {
+                $NewTokenContent.Add([QuoteInsertion]::QuoteChar);
+            }
             $index++;
 
         }
 
-        if(((($Token|where{$_-eq[QuoteInsertion]::QuoteChar})).length %2) -ne ((($NewTokenContent|where{$_-eq[QuoteInsertion]::QuoteChar})).length %2)){
+        if (((($Token | where { $_ -eq [QuoteInsertion]::QuoteChar })).length % 2) -ne ((($NewTokenContent | where { $_ -eq [QuoteInsertion]::QuoteChar })).length % 2)) {
             $j = -1;
-            $NewTokenContent|foreach{$i=0}{if($_-eq[QuoteInsertion]::QuoteChar){$j=$i} $i++};
+            $NewTokenContent | foreach { $i = 0 } { if ($_ -eq [QuoteInsertion]::QuoteChar) { $j = $i } $i++ };
 
             $NewTokenContent.RemoveAt($j);
         }
-
+        #
         return $NewTokenContent;
     }
 
@@ -48,7 +48,7 @@ class QuoteInsertion : Modifier {
             if ($this.AppliesTo.Contains($Token.Type)) {
                 $parts = $Token.ToString().split(" ");
 
-                $Token.TokenContent = ($parts|foreach{$this.AddQuotes($_.ToCharArray()) -join ""}) -join " "
+                $Token.TokenContent = ($parts | foreach { $this.AddQuotes($_.ToCharArray()) -join "" }) -join " "
                 ;
             }
         }
