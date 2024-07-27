@@ -63,7 +63,7 @@ class UrlTransformer : Modifier {
                             $ints = $args[0].value.split('.');
                             [array]::reverse($ints);
                             [int]$decimal = 0;
-                            $ints | foreach { $i = 0 } { $decimal += ([int]$_ * [Math]::Pow(256, $i++)) };
+                            $ints | ForEach-Object { $i = 0 } { $decimal += ([int]$_ * [Math]::Pow(256, $i++)) };
 
                             if ([Modifier]::CoinFlip(0.5)) {
                                 return $decimal;

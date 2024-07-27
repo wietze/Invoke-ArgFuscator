@@ -30,9 +30,9 @@ class QuoteInsertion : Modifier {
 
         }
 
-        if (((($Token | where { $_ -eq [QuoteInsertion]::QuoteChar })).length % 2) -ne ((($NewTokenContent | where { $_ -eq [QuoteInsertion]::QuoteChar })).length % 2)) {
+        if (((($Token | Where-Object { $_ -eq [QuoteInsertion]::QuoteChar })).length % 2) -ne ((($NewTokenContent | Where-Object { $_ -eq [QuoteInsertion]::QuoteChar })).length % 2)) {
             $j = -1;
-            $NewTokenContent | foreach { $i = 0 } { if ($_ -eq [QuoteInsertion]::QuoteChar) { $j = $i } $i++ };
+            $NewTokenContent | ForEach-Object { $i = 0 } { if ($_ -eq [QuoteInsertion]::QuoteChar) { $j = $i } $i++ };
 
             $NewTokenContent.RemoveAt($j);
         }
@@ -42,13 +42,10 @@ class QuoteInsertion : Modifier {
 
     [void]GenerateOutput() {
         foreach ($Token in $this.InputCommandTokens) {
-            $NewTokenContent = [System.Collections.ArrayList]@();
-            $i = 0;
-            $index = 0;
             if ($this.AppliesTo.Contains($Token.Type)) {
                 $parts = $Token.ToString().split(" ");
 
-                $Token.TokenContent = ($parts | foreach { $this.AddQuotes($_.ToCharArray()) -join "" }) -join " "
+                $Token.TokenContent = ($parts | ForEach-Object { $this.AddQuotes($_.ToCharArray()) -join "" }) -join " "
                 ;
             }
         }
