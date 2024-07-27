@@ -16,7 +16,7 @@ if($args.Length -eq 0){
     if (!($n = Read-Host "Number of commands to generate [default=$n_default]")) { $n = $n_default }
 } else {
     $InputFile = $Args[0]
-    $n = $Args[1]
+    $n = $args.Length -eq 2 ? $Args[1] : $n_default;
 
     if($args.Length -gt 2){
         throw "Unexpected argument count"

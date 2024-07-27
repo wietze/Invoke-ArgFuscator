@@ -7,7 +7,7 @@ class RegularExpression : Modifier {
     [string]$RegexMatch;
     [string]$RegexReplace;
 
-    RegularExpression([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [string]$RegexMatch, [string]$RegexReplace, [boolean]$CaseSensitive) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
+    RegularExpression([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [string]$RegexMatch, [string]$RegexReplace, [boolean]$CaseSensitive) : base($InputCommandTokens, $AppliesTo, $Probability) {
         $this.RegexMatch = $RegexMatch;
         if (!$CaseSensitive) {
             $this.RegexMatch = "(?i)" + $this.RegexMatch;
@@ -19,7 +19,7 @@ class RegularExpression : Modifier {
         foreach ($Token in $this.InputCommandTokens) {
             $NewTokenContent = $Token.ToString();
 
-            if (!$this.ExcludedTypes.Contains($Token.Type) -and [Modifier]::CoinFlip($this.Probability)) {
+            if ($this.AppliesTo.Contains($Token.Type) -and [Modifier]::CoinFlip($this.Probability)) {
                 $this.RegexReplace = [regex]::replace($this.RegexReplace, "\`$(\d+)\[(\d+):(\d+(?:-x?(?:\d+)?)?)\]", {
                         [int]$rIndex = $args[0].groups[1].value
                         [int]$start = $args[0].groups[2].value

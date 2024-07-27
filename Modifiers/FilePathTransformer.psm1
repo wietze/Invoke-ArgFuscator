@@ -7,7 +7,7 @@ class FilePathTransformer : Modifier {
     [boolean]$SubstituteSlashes;
     [boolean]$ExtraSlashes;
 
-    FilePathTransformer([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [boolean]$PathTraversal, [boolean]$SubstituteSlashes, [boolean]$ExtraSlashes) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
+    FilePathTransformer([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [boolean]$PathTraversal, [boolean]$SubstituteSlashes, [boolean]$ExtraSlashes) : base($InputCommandTokens, $AppliesTo, $Probability) {
         $this.PathTraversal = $PathTraversal;
         $this.SubstituteSlashes = $SubstituteSlashes;
         $this.ExtraSlashes = $ExtraSlashes;
@@ -17,7 +17,7 @@ class FilePathTransformer : Modifier {
         foreach ($Token in $this.InputCommandTokens) {
             $NewTokenContent = $Token.ToString();
 
-            if (!$this.ExcludedTypes.Contains($Token.Type)) {
+            if ($this.AppliesTo.Contains($Token.Type)) {
                 # Path Traversal
                 if ($this.PathTraversal) {
                     $NewTokenContent = [regex]::replace($NewTokenContent, "([^\\/])([\\/])([^\\/])", {
@@ -32,12 +32,12 @@ class FilePathTransformer : Modifier {
 
                 # Substitute slashes
                 if ($this.SubstituteSlashes) {
-                    $NewTokenContent = [regex]::replace($NewTokenContent, "[/\\]", {
-                            if ([Modifier]::CoinFlip($this.Probability)) {
-                                if ($args[0].value -eq "/") {
-                                    return "\\"
+                    $NewTokenContent = [regex]::replace($NewTokenContent, "[/\\]+", {
+                            if (($args[0].index -gt 0) -and [Modifier]::CoinFlip($this.Probability)) {
+                                if ($args[0].value.StartsWith("/")) {
+                                    return "\\" * $args[0].value.length
                                 }
-                                return "/"
+                                return "/" * $args[0].value.length
                             }
                             return $args[0].value;
                         });
@@ -54,8 +54,8 @@ class FilePathTransformer : Modifier {
                             return $args[0].groups[0].value;
                         });
                 }
-                $Token.TokenContent = $NewTokenContent;
             }
+            $Token.TokenContent = $NewTokenContent;
         }
     }
 }

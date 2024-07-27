@@ -6,14 +6,14 @@ class CharacterInsertion : Modifier {
     [char[]]$Characters;
     [int]$Offset;
 
-    CharacterInsertion([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [string[]]$Characters, [int]$Offset) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
+    CharacterInsertion([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [string[]]$Characters, [int]$Offset) : base($InputCommandTokens, $AppliesTo, $Probability) {
         $this.Characters = $Characters;
         $this.Offset = $Offset;
     }
 
     [void]GenerateOutput() {
         foreach ($Token in $this.InputCommandTokens) {
-            if (!$this.ExcludedTypes.Contains($Token.Type)) {
+            if ($this.AppliesTo.Contains($Token.Type)) {
                 $NewTokenContent = [System.Collections.ArrayList]@();
                 $Token.TokenContent | Select-Object -First $this.Offset | ForEach-Object { $NewTokenContent.Add($_) }
 

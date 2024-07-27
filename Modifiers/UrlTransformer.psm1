@@ -9,7 +9,7 @@ class UrlTransformer : Modifier {
     [boolean]$IpToHex;
     [boolean]$PathTraversal;
 
-    UrlTransformer([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [boolean]$LeaveOutProtocol, [boolean]$LeaveOutDoubleSlashes, [boolean]$SubstituteSlashes, [boolean]$IpToHex, [boolean]$PathTraversal) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
+    UrlTransformer([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [boolean]$LeaveOutProtocol, [boolean]$LeaveOutDoubleSlashes, [boolean]$SubstituteSlashes, [boolean]$IpToHex, [boolean]$PathTraversal) : base($InputCommandTokens, $AppliesTo, $Probability) {
         $this.LeaveOutProtocol = $LeaveOutProtocol;
         $this.SubstituteSlashes = $SubstituteSlashes;
         $this.IpToHex = $IpToHex;
@@ -20,7 +20,7 @@ class UrlTransformer : Modifier {
         foreach ($Token in $this.InputCommandTokens) {
             $NewTokenContent = $Token.ToString();
 
-            if (!$this.ExcludedTypes.Contains($Token.Type)) {
+            if ($this.AppliesTo.Contains($Token.Type)) {
                 # Leave out protocol
                 if ($this.LeaveOutProtocol -and [Modifier]::CoinFlip($this.Probability)) {
                     $NewTokenContent = [regex]::replace($NewTokenContent, "\w+:\/\/", "://");

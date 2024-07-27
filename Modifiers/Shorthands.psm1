@@ -7,7 +7,7 @@ class Shorthands : Modifier {
     [System.Collections.HashTable]$Substitutions; #[string, string[]]
     static [char]$Separator = ',';
 
-    Shorthands([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability, [string]$ShorthandCommands, [bool]$CaseSensitive) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
+    Shorthands([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [string]$ShorthandCommands, [bool]$CaseSensitive) : base($InputCommandTokens, $AppliesTo, $Probability) {
         $this.CaseSensitive = $CaseSensitive;
         $this.Substitutions = @{};
         $Commands = $ShorthandCommands.split([Shorthands]::Separator) | ForEach-Object { $this.NormaliseArgument($_, $True) }
@@ -48,7 +48,7 @@ class Shorthands : Modifier {
 
     [void]GenerateOutput() {
         foreach ($Token in $this.InputCommandTokens) {
-            if (!$this.ExcludedTypes.Contains($Token.Type) -and [Modifier]::CoinFlip($this.Probability)) {
+            if ($this.AppliesTo.Contains($Token.Type) -and [Modifier]::CoinFlip($this.Probability)) {
                 $NewTokenContent = $this.NormaliseArgument($Token.ToString(), $True);
                 if ($this.Substitutions.ContainsKey($NewTokenContent)) {
                     $OriginalToken = $this.NormaliseArgument($Token.ToString(), $False);

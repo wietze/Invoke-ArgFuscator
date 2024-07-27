@@ -4,12 +4,12 @@ using module "..\Types\Token.psm1"
 class RandomCase : Modifier {
     [float]$Probability;
 
-    RandomCase([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
+    RandomCase([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability) : base($InputCommandTokens, $AppliesTo, $Probability) {
     }
 
     [void]GenerateOutput() {
         foreach ($Token in $this.InputCommandTokens) {
-            if (!$this.ExcludedTypes.Contains($Token.Type)) {
+            if ($this.AppliesTo.Contains($Token.Type)) {
                 $NewTokenContent = [System.Collections.ArrayList]@();
                 foreach ($Char in $Token.TokenContent) {
                     if ([Modifier]::CoinFlip($this.Probability)) {

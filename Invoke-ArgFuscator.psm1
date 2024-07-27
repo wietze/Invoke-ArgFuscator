@@ -75,7 +75,7 @@ function Invoke-ArgFuscator {
             }
 
             # Create dictionary with arguments and values
-            $ModifierArguments = @{InputCommandTokens = [Token[]]$Tokens; ExcludedTypes = [string[]]@() };
+            $ModifierArguments = @{InputCommandTokens = [Token[]]$Tokens; AppliesTo = [string[]]@() };
             foreach ($param in $modifier_params.Value.PSObject.Properties) {
                 if ($ModifierArguments.ContainsKey($param.Name)) {
                     $ModifierArguments[$param.Name] = $param.Value;

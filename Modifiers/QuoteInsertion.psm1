@@ -5,7 +5,7 @@ class QuoteInsertion : Modifier {
     [float]$Probability;
     static [char]$QuoteChar = '"';
 
-    QuoteInsertion([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability) : base($InputCommandTokens, $ExcludedTypes, $Probability) {
+    QuoteInsertion([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability) : base($InputCommandTokens, $AppliesTo, $Probability) {
 
     }
 
@@ -45,7 +45,7 @@ class QuoteInsertion : Modifier {
             $NewTokenContent = [System.Collections.ArrayList]@();
             $i = 0;
             $index = 0;
-            if (!$this.ExcludedTypes.Contains($Token.Type)) {
+            if ($this.AppliesTo.Contains($Token.Type)) {
                 $parts = $Token.ToString().split(" ");
 
                 $Token.TokenContent = ($parts|foreach{$this.AddQuotes($_.ToCharArray()) -join ""}) -join " "

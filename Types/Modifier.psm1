@@ -1,7 +1,7 @@
 using module ".\Token.psm1"
 class Modifier {
     [Token[]]$InputCommandTokens;
-    [string[]]$ExcludedTypes = $("disabled");
+    [string[]]$AppliesTo = $();
     [bool]$Probability;
     static [char]$SeparationChar = ' ';
     static [char[]]$QuoteChars = @('"', '''');
@@ -9,9 +9,9 @@ class Modifier {
     static [string[]]$CommonOptionChars = @("/", "-");
     static [string[]]$Keywords = @("debug", "system32", "compile", "winsxs", "temp", "update")
 
-    Modifier([Token[]]$InputCommandTokens, [string[]]$ExcludedTypes, [float]$Probability) {
+    Modifier([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability) {
         $this.InputCommandTokens = $InputCommandTokens;
-        $this.ExcludedTypes += $ExcludedTypes;
+        $this.AppliesTo += $AppliesTo;
         $this.Probability = $Probability;
     }
 
