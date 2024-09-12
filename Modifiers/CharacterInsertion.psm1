@@ -17,8 +17,12 @@ class CharacterInsertion : Modifier {
                 $NewTokenContent = [System.Collections.ArrayList]@();
                 $Token.TokenContent | Select-Object -First $this.Offset | ForEach-Object { $NewTokenContent.Add($_) }
 
+                $j = $this.Offset;
                 foreach ($Char in ($Token.TokenContent | Select-Object -Skip $this.Offset)) {
                     $NewTokenContent.Add($Char);
+                    if(($j -eq ($Token.Length - 1)) -and ([Modifier]::ValueChars -contains $Char)){
+                        continue;
+                    }
                     $i = 0;
                     if ([Modifier]::CoinFlip($this.Probability)) {
                         do {
