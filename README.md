@@ -31,7 +31,7 @@ Simply clone or download the contents of this repository to a folder of choice.
 
 ## Usage
 
-1. Make sure you have a model file, in JSON format. These can be generated via [ArgFuscator.net](https://argfuscator.net/) via the 'Download' option; alternatively, you can obtain raw base files via [GitHub](https://github.com/wietze/Argfuscator.net/main/tree/models).
+1. Make sure you have a model file, in JSON format. These can be generated via [ArgFuscator.net](https://argfuscator.net/) via the 'Download' option; alternatively, you can obtain raw base files via [GitHub](https://github.com/wietze/Argfuscator.net/tree/main/models).
 2. Call `Invoke-ArgFuscator.ps1` via PowerShell, e.g.:
 
    ```bash

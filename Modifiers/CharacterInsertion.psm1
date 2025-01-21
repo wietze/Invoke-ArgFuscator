@@ -3,7 +3,7 @@ using module "..\Types\Token.psm1"
 
 class CharacterInsertion : Modifier {
     [float]$Probability;
-    [char[]]$Characters;
+    [string[]]$Characters;
     [int]$Offset;
 
     CharacterInsertion([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [string[]]$Characters, [int]$Offset) : base($InputCommandTokens, $AppliesTo, $Probability) {
@@ -20,7 +20,7 @@ class CharacterInsertion : Modifier {
                 $j = $this.Offset;
                 foreach ($Char in ($Token.TokenContent | Select-Object -Skip $this.Offset)) {
                     $NewTokenContent.Add($Char);
-                    if(($j -eq ($Token.Length - 1)) -and ([Modifier]::ValueChars -contains $Char)){
+                    if(($j -eq ($Token.TokenContent.Length - 1)) -and ([Modifier]::ValueChars -contains $Char)){
                         continue;
                     }
                     $i = 0;
@@ -31,9 +31,10 @@ class CharacterInsertion : Modifier {
                             $i++;
                         } while ([Modifier]::CoinFlip($this.Probability * [Math]::Pow(0.9, $i)));
                     }
+                    $j += 1
                 }
 
-                $Token.TokenContent = $NewTokenContent;
+                $Token.TokenContent = ($NewTokenContent -join "").ToCharArray();
             }
         }
     }

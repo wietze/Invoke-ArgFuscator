@@ -20,7 +20,7 @@ class RegularExpression : Modifier {
             $NewTokenContent = $Token.ToString();
 
             if ($this.AppliesTo.Contains($Token.Type) -and [Modifier]::CoinFlip($this.Probability)) {
-                $this.RegexReplace = [regex]::replace($this.RegexReplace, "\`$(\d+)\[(\d+):(\d+(?:-x?(?:\d+)?)?)\]", {
+                $RegexReplacer = [regex]::replace($this.RegexReplace, "\`$(\d+)\[(\d+):(\d+(?:-x?(?:\d+)?)?)\]", {
                         [int]$rIndex = $args[0].groups[1].value
                         [int]$start = $args[0].groups[2].value
                         [string]$end = $args[0].groups[3].value
@@ -36,9 +36,9 @@ class RegularExpression : Modifier {
                         return $args[0].value;
                     });
 
-                $this.RegexMatch = $this.RegexMatch -replace "`$RANDOM", ( -join ((65..90) + (97..122) | Get-Random -Count (Get-Random -minimum 1 -Maximum 20) | ForEach-Object { [char]$_ }))
+                $RegexMatchr = $this.RegexMatch -replace "`$RANDOM", ( -join ((65..90) + (97..122) | Get-Random -Count (Get-Random -minimum 1 -Maximum 20) | ForEach-Object { [char]$_ }))
 
-                $NewTokenContent = [regex]::replace($NewTokenContent, $this.RegexMatch, $this.RegexReplace)
+                $NewTokenContent = [regex]::replace($NewTokenContent, $RegexMatchr, $RegexReplacer)
                 $Token.TokenContent = $NewTokenContent;
             }
         }

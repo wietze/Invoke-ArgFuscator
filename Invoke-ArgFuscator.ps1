@@ -10,7 +10,7 @@ if ($args.Length -eq 0) {
     Write-Host "█▀░▀▄█▒▄██░▀▄▄░█▀█░▒█▒░▀▄▀░█▀▄░" -f DarkGray
     Write-Host "By " -NoNewline
     Write-Host "@Wietze" -f Blue -NoNewline
-    Write-Host ", (c) 2024`n"
+    Write-Host ", (c) 2024-2025`n"
 
     $InputFile = Read-Host "Path to configuration file"
     if (!($n = Read-Host "Number of commands to generate [default=$n_default]")) { $n = $n_default }
