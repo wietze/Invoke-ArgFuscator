@@ -22,8 +22,8 @@ Although previous research has highlighted the risks of command-line obfuscation
 This module works on any operating system supporting PowerShell/pwsh; this includes Windows, macOS and Linux.
 
 * **Windows**: If you are using a Microsoft-supported version of Windows, such as Windows 10 or Windows 11, PowerShell will be pre-installed on your device.
-* **macOS**: If you have `brew` preinstalled, run `brew install powershell/tap/powershell` to install the latest version of PowerShell. For alternative installation options, refer to Microsoft's [documentation].
-* **Linux**: Refer to Microsoft's [documentation] to see how you can install PowerShell on your distribution.
+* **macOS**: If you have `brew` preinstalled, run `brew install powershell/tap/powershell` to install the latest version of PowerShell. For alternative installation options, refer to Microsoft's [documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos).
+* **Linux**: Refer to Microsoft's [documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux) to see how you can install PowerShell on your distribution.
 
 ### Installation
 
