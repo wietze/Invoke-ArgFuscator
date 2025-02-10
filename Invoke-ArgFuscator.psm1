@@ -22,7 +22,6 @@ function Invoke-TokeniseCommand {
     $CommonOptionChars = @('/', '-')
 
     $InQuote = $null
-    $InOptionChar = $null 
     [Token[]]$Tokens = @()  # Explicitly type the array as Token[]
     $TokenContent = @()
     $SeenValueChar = $false
@@ -30,7 +29,6 @@ function Invoke-TokeniseCommand {
     for ($i = 0; $i -lt $InputCommand.Length; $i++) {
         if ($TokenContent.Count -eq 0) { $SeenValueChar = $false }
         $Char = $InputCommand[$i].ToString()
-        $InOptionChar = ($TokenContent.Count -eq 0 -and ($CommonOptionChars | Where-Object { $_ -eq $Char })) ? $true : $InOptionChar
         
         if (($null -eq $InQuote) -and (
                 ($Char -eq $SeparationChar) -or (
@@ -47,7 +45,6 @@ function Invoke-TokeniseCommand {
                 $Tokens += [Token]::new($TokenContent)
             }
             $TokenContent = @()
-            $InOptionChar = $false
         }
         else {
             if (($null -ne $InQuote) -and ($Char -eq $InQuote)) {
