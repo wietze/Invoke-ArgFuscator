@@ -31,15 +31,7 @@ function Invoke-TokeniseCommand {
         if ($TokenContent.Count -eq 0) { $SeenValueChar = $false }
         $Char = $InputCommand[$i].ToString()
         $InOptionChar = ($TokenContent.Count -eq 0 -and ($CommonOptionChars | Where-Object { $_ -eq $Char })) ? $true : $InOptionChar
-        # if (InQuote == null && (Char == this.SeparationChar || (!SeenValueChar && (i == InputCommand.length || !(['\\', '/'].some(x => x == InputCommand[i + 1]))) && this.ValueChars.some(x => x == Char)))) {
-
-        # if (($null -eq $InQuote) -and (
-        #     ($Char -eq $SeparationChar) -or (
-        #         (-not $SeenValueChar) -and 
-        #             ((($i -eq $InputCommand.Length) -or (-not @('\\', '/') -contains $InputCommand[$i + 1])) -and 
-        #         $ValueChars.contains($Char))
-        #     )
-        # )) {
+        
         if (($null -eq $InQuote) -and (
                 ($Char -eq $SeparationChar) -or (
                     (-not $SeenValueChar) -and 
