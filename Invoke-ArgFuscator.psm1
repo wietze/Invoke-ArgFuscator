@@ -133,7 +133,7 @@ function Invoke-ArgFuscator {
                     throw "Platform '$_' not found. Make sure the platform directory exists in the models folder."
                 }
             })]
-        [string]$platform = "windows",
+        [string]$Platform = "windows",
         [int]$n = 1
     )
     <#
@@ -147,10 +147,10 @@ function Invoke-ArgFuscator {
     Specifies the path to the JSON-formatted config file.
 
     .PARAMETER Command
-    Specifies the windows command as string
+    Specifies the command as string.
 
-    .PARAMETER platform
-    Specifies the platform (windows, linux, macos)
+    .PARAMETER Platform
+    Specifies the platform (windows, linux, macos). Default value is windows.
 
     .PARAMETER n
     Specifies the number of obfuscated commands to generate. Default value is 1.
@@ -171,7 +171,7 @@ function Invoke-ArgFuscator {
     else {
         $CommandData = Invoke-TokeniseCommand $Command
         $cmd = $CommandData[0]["command"]
-        $filePath = "$PSScriptRoot\models\$platform\$cmd.json"
+        $filePath = "$PSScriptRoot\models\$Platform\$cmd.json"
         if (Test-Path $filePath) {
             $ModelData = Get-Content -Encoding UTF8 -Path $filePath | ConvertFrom-Json
             # Create a PSCustomObject that matches the expected format
