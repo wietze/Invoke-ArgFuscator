@@ -18,7 +18,7 @@ function Invoke-TokeniseCommand {
     if ($null -eq $InputCommand) { return $null }
     $SeparationChar = ' '
     $QuoteChars = @('"', "'")
-    $ValueChars = @('=', ':') 
+    $ValueChars = @('=', ':')
     $CommonOptionChars = @('/', '-')
 
     $InQuote = $null
@@ -29,14 +29,14 @@ function Invoke-TokeniseCommand {
     for ($i = 0; $i -lt $InputCommand.Length; $i++) {
         if ($TokenContent.Count -eq 0) { $SeenValueChar = $false }
         $Char = $InputCommand[$i].ToString()
-        
+
         if (($null -eq $InQuote) -and (
                 ($Char -eq $SeparationChar) -or (
-                    (-not $SeenValueChar) -and 
-                        ((($i -eq $InputCommand.Length) -or (-not @('\\', '/') -contains $InputCommand[$i + 1])) -and 
+                    (-not $SeenValueChar) -and
+                        ((($i -eq $InputCommand.Length) -or (-not @('\\', '/') -contains $InputCommand[$i + 1])) -and
                     $ValueChars.contains($Char))
                 )
-            )) {    
+            )) {
             if ($Char -ne $SeparationChar) {
                 $TokenContent += $Char
             }
@@ -118,19 +118,19 @@ function Invoke-ArgFuscator {
                     throw "Make sure the file exists, and has a '.json' extension."
                 } })]
         [string]$InputFile,
-        
+
         [Parameter(Mandatory = $true, ParameterSetName = "FromCommand")]
         [ValidateNotNullOrEmpty()]
         [string]$Command,
 
         [Parameter(ParameterSetName = "FromCommand")]
-        [ValidateScript({ 
+        [ValidateScript({
                 $platformPath = Join-Path $PSScriptRoot "models" $_
                 if (Test-Path $platformPath -PathType Container) {
                     return $true
                 }
                 else {
-                    throw "Platform '$_' not found. Make sure the platform directory exists in the models folder."
+                    throw "Platform '$_' not found. Make sure the platform directory exists in the models folder ($platformPath)."
                 }
             })]
         [string]$Platform = "windows",
@@ -171,7 +171,7 @@ function Invoke-ArgFuscator {
     else {
         $CommandData = Invoke-TokeniseCommand $Command
         $cmd = $CommandData[0]["command"]
-        $filePath = "$PSScriptRoot\models\$Platform\$cmd.json"
+        $filePath = Join-Path -Path $PSScriptRoot -ChildPath "\models\$Platform\$cmd.json"
         if (Test-Path $filePath) {
             $ModelData = Get-Content -Encoding UTF8 -Path $filePath | ConvertFrom-Json
             # Create a PSCustomObject that matches the expected format
@@ -181,7 +181,7 @@ function Invoke-ArgFuscator {
             }
         }
         else {
-            Write-Error("Command {0} could not be found in models" -f $cmd)
+            Write-Error("Command '{0}' could not be found in models folder ({1} does not exist)" -f $cmd,$filePath)
             return $null
         }
     }
