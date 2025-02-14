@@ -1,0 +1,19 @@
+name: Publish PowerShell Module
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-powershell-gallery:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: publishing
+        run: |
+          curl -L https://github.com/wietze/ArgFuscator.net/archive/refs/heads/main.zip -o ArgFuscator.zip && unzip ArgFuscator.zip && rm ArgFuscator.zip
+          mv ./ArgFuscator.net-main/models .
+          rm -rf ./ArgFuscator.net-main
+          rm ./Invoke-ArgFuscator.ps1
+          Publish-Module -Path '.' -NuGetApiKey ${{ secrets.PGALLERY }}
+        shell: pwsh
