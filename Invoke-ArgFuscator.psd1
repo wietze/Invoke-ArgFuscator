@@ -4,7 +4,7 @@
     RootModule        = 'Invoke-ArgFuscator.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.1.0'
+    ModuleVersion     = '1.2.0'
 
     # ID used to uniquely identify this module
     GUID              = '844d9edc-57ad-4fcc-9fd5-77a69d4bf569'

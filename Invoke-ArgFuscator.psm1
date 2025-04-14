@@ -134,7 +134,8 @@ function Invoke-ArgFuscator {
                 }
             })]
         [string]$Platform = "windows",
-        [int]$n = 1
+        [int]$n = 1,
+        [switch]$Interactive
     )
     <#
     .SYNOPSIS
@@ -176,12 +177,12 @@ function Invoke-ArgFuscator {
             $ModelData = Get-Content -Encoding UTF8 -Path $filePath | ConvertFrom-Json
             # Create a PSCustomObject that matches the expected format
             $JSONData = [PSCustomObject]@{
-                "command"   = ($CommandData  | ConvertTo-JSON | ConvertFrom-Json)
+                "command"   = ($CommandData | ConvertTo-JSON | ConvertFrom-Json)
                 "modifiers" = $ModelData.modifiers
             }
         }
         else {
-            Write-Error("Command '{0}' could not be found in models folder ({1} does not exist)" -f $cmd,$filePath)
+            Write-Error ("Command '{0}' could not be found in models folder ({1} does not exist)" -f $cmd, $filePath)
             return $null
         }
     }
@@ -189,6 +190,22 @@ function Invoke-ArgFuscator {
     for ($i = 0; $i -lt $n; $i++) {
         $Tokens = [System.Collections.ArrayList]@();
         $OriginalTokens = [System.Collections.ArrayList]@();
+
+        # Ensure a command is provided
+        if (!(Get-Member -InputObject $JSONData -name "command" -Membertype Properties) -or ($JSONData.command.Length -le 0)) {
+            if ($Interactive.IsPresent) {
+                Write-Warning "No command was specified in the provided JSON file."
+                while (($null -eq $CommandInput) -or ($CommandInput.Length -eq 0)) {
+                    $CommandInput = Read-Host "Enter your command here"
+                }
+                $JSONData.command = (Invoke-TokeniseCommand $CommandInput | ConvertTo-JSON | ConvertFrom-Json)
+            }
+            else {
+                Write-Error "No command was specified in the provided JSON file." -RecommendedAction "Either define a tokenised command in your file, or use interactive mode by specifying -Interactive." -Category InvalidData
+                return $null;
+            }
+        }
+
         foreach ($type_value in $JSONData.command) {
             $Token = [Token]::new($type_value.PSObject.Properties.Value.ToCharArray());
             $Token.Type = $type_value.PSObject.Properties.Name;
