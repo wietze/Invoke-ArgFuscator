@@ -14,7 +14,7 @@ if ($args.Length -eq 0) {
 
     $InputFile = Read-Host "Path to configuration file"
     if (!($n = Read-Host "Number of commands to generate [default=$n_default]")) { $n = $n_default }
-    $Args = @{ InputFile = $InputFile; n = $n };
+    $Arguments = @{ InputFile = $InputFile; n = $n; Interactive = $true };
 }
 
-Invoke-ArgFuscator @Args
+Invoke-ArgFuscator @Arguments
