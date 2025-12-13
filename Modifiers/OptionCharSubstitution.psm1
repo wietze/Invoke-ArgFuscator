@@ -1,10 +1,11 @@
 using module "..\Types\Modifier.psm1"
 using module "..\Types\Token.psm1"
+using module "..\Types\Argument.psm1"
 
 class OptionCharSubstitution : Modifier {
     [char[]]$OutputOptionChars;
 
-    OptionCharSubstitution([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [object]$OutputOptionChars) : base($InputCommandTokens, $AppliesTo, $Probability) {
+    OptionCharSubstitution([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [Argument[]]$Arguments, [float]$Probability, [object]$OutputOptionChars) : base($InputCommandTokens, $AppliesTo, $Arguments, $Probability) {
         $this.OutputOptionChars = $OutputOptionChars;
     }
 

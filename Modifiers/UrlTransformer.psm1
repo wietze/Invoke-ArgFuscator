@@ -1,5 +1,6 @@
 using module "..\Types\Modifier.psm1"
 using module "..\Types\Token.psm1"
+using module "..\Types\Argument.psm1"
 
 class UrlTransformer : Modifier {
     [float]$Probability;
@@ -9,7 +10,7 @@ class UrlTransformer : Modifier {
     [boolean]$IpToHex;
     [boolean]$PathTraversal;
 
-    UrlTransformer([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [boolean]$LeaveOutProtocol, [boolean]$LeaveOutDoubleSlashes, [boolean]$SubstituteSlashes, [boolean]$IpToHex, [boolean]$PathTraversal) : base($InputCommandTokens, $AppliesTo, $Probability) {
+    UrlTransformer([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [Argument[]]$Arguments, [float]$Probability, [boolean]$LeaveOutProtocol, [boolean]$LeaveOutDoubleSlashes, [boolean]$SubstituteSlashes, [boolean]$IpToHex, [boolean]$PathTraversal) : base($InputCommandTokens, $AppliesTo, $Arguments, $Probability) {
         $this.LeaveOutProtocol = $LeaveOutProtocol;
         $this.SubstituteSlashes = $SubstituteSlashes;
         $this.IpToHex = $IpToHex;
@@ -62,8 +63,8 @@ class UrlTransformer : Modifier {
                     $NewTokenContent = [regex]::replace($NewTokenContent, "(?:[0-9]{1,3}\.){3}[0-9]{1,3}", {
                             $ints = $args[0].value.split('.');
                             [array]::reverse($ints);
-                            [int]$decimal = 0;
-                            $ints | ForEach-Object { $i = 0 } { $decimal += ([int]$_ * [Math]::Pow(256, $i++)) };
+                            [System.Numerics.BigInteger]$decimal = 0;
+                            $ints | ForEach-Object { $i = 0 } { $decimal += ([System.Numerics.BigInteger]$_ * [Math]::Pow(256, $i++)) };
 
                             if ([Modifier]::CoinFlip(0.5)) {
                                 return $decimal;

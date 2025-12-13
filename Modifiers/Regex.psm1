@@ -1,5 +1,6 @@
 using module "..\Types\Modifier.psm1"
 using module "..\Types\Token.psm1"
+using module "..\Types\Argument.psm1"
 
 # 'Regex' is taken, hence 'RegularExpression'
 class RegularExpression : Modifier {
@@ -7,7 +8,7 @@ class RegularExpression : Modifier {
     [string]$RegexMatch;
     [string]$RegexReplace;
 
-    RegularExpression([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [string]$RegexMatch, [string]$RegexReplace, [boolean]$CaseSensitive) : base($InputCommandTokens, $AppliesTo, $Probability) {
+    RegularExpression([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [Argument[]]$Arguments, [float]$Probability, [string]$RegexMatch, [string]$RegexReplace, [boolean]$CaseSensitive) : base($InputCommandTokens, $AppliesTo, $Arguments, $Probability) {
         $this.RegexMatch = $RegexMatch;
         if (!$CaseSensitive) {
             $this.RegexMatch = "(?i)" + $this.RegexMatch;

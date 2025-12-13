@@ -1,12 +1,13 @@
 using module "..\Types\Modifier.psm1"
 using module "..\Types\Token.psm1"
 using module "..\Types\Sed.psm1"
+using module "..\Types\Argument.psm1"
 
 class Sed : Modifier {
     [float]$Probability;
     [SedStatement[]]$SedStatements;
 
-    Sed([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [string]$SedStatements) : base($InputCommandTokens, $AppliesTo, $Probability) {
+    Sed([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [Argument[]]$Arguments, [float]$Probability, [string]$SedStatements) : base($InputCommandTokens, $AppliesTo, $Arguments, $Probability) {
         $this.SedStatements = @();
         $SedStatements.Split("`n") | Where-Object { $null -ne $_ } | Foreach-Object {
             $this.SedStatements += (New-Object SedStatement -ArgumentList @($_))

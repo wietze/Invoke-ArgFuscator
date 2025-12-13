@@ -1,18 +1,21 @@
 using module "Types\Token.psm1"
+using module "Types\Argument.psm1"
 using module "Modifiers\CharacterInsertion.psm1"
 using module "Modifiers\FilePathTransformer.psm1"
 using module "Modifiers\OptionCharSubstitution.psm1"
 using module "Modifiers\QuoteInsertion.psm1"
 using module "Modifiers\RandomCase.psm1"
 using module "Modifiers\Regex.psm1"
+using module "Modifiers\ReorderArgs.psm1"
 using module "Modifiers\Sed.psm1"
 using module "Modifiers\Shorthands.psm1"
 using module "Modifiers\UrlTransformer.psm1"
 
 $OutputEncoding = [ System.Text.Encoding]::UTF8
 function Invoke-TokeniseCommand {
-    param(
-        [string]$InputCommand
+    param (
+        [string]$InputCommand,
+        [Argument[]]$Arguments
     )
 
     if ($null -eq $InputCommand) { return $null }
@@ -42,7 +45,8 @@ function Invoke-TokeniseCommand {
             }
 
             if ($TokenContent.Count -gt 0) {
-                $Tokens += [Token]::new($TokenContent)
+                $details = [Argument]::GetArgumentDetails($Arguments, $TokenContent)
+                $Tokens += [Token]::new($TokenContent, ($null -eq $details) -and ($details.ValueCount -gt 0))
             }
             $TokenContent = @()
         }
@@ -60,7 +64,8 @@ function Invoke-TokeniseCommand {
     }
 
     if ($TokenContent.Count -gt 0) {
-        $Tokens += [Token]::new($TokenContent)
+        $details = [Argument]::GetArgumentDetails($Arguments, $TokenContent)
+        $Tokens += [Token]::new($TokenContent, ($null -eq $details) -and ($details.ValueCount -gt 0))
     }
 
     # Find matching template, if available
@@ -79,7 +84,6 @@ function Invoke-TokeniseCommand {
             if ($Tokens[0].ToString() -match 'wmic(\.exe)?'`
                     -and -not ($Tokens[1..($i + 1)] | Where-Object { $_.GetType() -eq 'disabled' })`
                     -and -not ($Tokens[$i].GetType() -eq 'argument' -and ($ValueChars | Where-Object { $Tokens[$i].TokenContent[-1] -eq $_ }))) {
-                Write-Host $Tokens[$i]
                 $_.Type = 'disabled'
             }
         }
@@ -135,6 +139,7 @@ function Invoke-ArgFuscator {
             })]
         [string]$Platform = "windows",
         [int]$n = 1,
+        [int]$Profile = 0,
         [switch]$Interactive
     )
     <#
@@ -156,6 +161,13 @@ function Invoke-ArgFuscator {
     .PARAMETER n
     Specifies the number of obfuscated commands to generate. Default value is 1.
 
+    .PARAMETER Profile
+    Specifies the profile ID to use. Default value is 0.
+
+    .PARAMETER Interactive
+    Specifies whether or not this is an interactive execution, i.e. whether to request user input via the standard in. Without specifying this, a non-interactive session is assumed.
+
+
     .EXAMPLE
     PS> Invoke-Argfuscator some_config.json 5
 
@@ -170,7 +182,7 @@ function Invoke-ArgFuscator {
         $JSONData = Get-Content -Encoding UTF8 -Path $InputFile | ConvertFrom-Json
     }
     else {
-        $CommandData = Invoke-TokeniseCommand $Command
+        $CommandData = Invoke-TokeniseCommand $() $Command
         $cmd = $CommandData[0]["command"]
         $filePath = Join-Path -Path $PSScriptRoot -ChildPath "\models\$Platform\$cmd.json"
         if (Test-Path $filePath) {
@@ -179,6 +191,7 @@ function Invoke-ArgFuscator {
             $JSONData = [PSCustomObject]@{
                 "command"   = ($CommandData | ConvertTo-JSON | ConvertFrom-Json)
                 "modifiers" = $ModelData.modifiers
+                "arguments" = $ModelData.arguments
             }
         }
         else {
@@ -190,15 +203,21 @@ function Invoke-ArgFuscator {
     for ($i = 0; $i -lt $n; $i++) {
         $Tokens = [System.Collections.ArrayList]@();
         $OriginalTokens = [System.Collections.ArrayList]@();
+        $Arguments = [System.Collections.ArrayList]@();
+
+        # Select the right profile
+        $ProfileData = $JSONData.profiles[$Profile]
+        $ProfileParameters = $ProfileData.parameters
+        Write-Debug "Assuming version $($ProfileData.executableVersion) on $($ProfileData.operatingSystem) $($ProfileData.operatingSystemVersion)."
 
         # Ensure a command is provided
-        if (!(Get-Member -InputObject $JSONData -name "command" -Membertype Properties) -or ($JSONData.command.Length -le 0)) {
+        if (!(Get-Member -InputObject $ProfileParameters -name "command" -Membertype Properties) -or ($ProfileParameters.command.Length -le 0)) {
             if ($Interactive.IsPresent) {
                 Write-Warning "No command was specified in the provided JSON file."
                 while (($null -eq $CommandInput) -or ($CommandInput.Length -eq 0)) {
                     $CommandInput = Read-Host "Enter your command here"
                 }
-                $JSONData.command = (Invoke-TokeniseCommand $CommandInput | ConvertTo-JSON | ConvertFrom-Json)
+                $ProfileParameters.command = (Invoke-TokeniseCommand $ProfileParameters.arguments $CommandInput | ConvertTo-JSON | ConvertFrom-Json)
             }
             else {
                 Write-Error "No command was specified in the provided JSON file." -RecommendedAction "Either define a tokenised command in your file, or use interactive mode by specifying -Interactive." -Category InvalidData
@@ -206,18 +225,27 @@ function Invoke-ArgFuscator {
             }
         }
 
-        foreach ($type_value in $JSONData.command) {
-            $Token = [Token]::new($type_value.PSObject.Properties.Value.ToCharArray());
+        if ($ProfileParameters.arguments) {
+            foreach ($argument in $ProfileParameters.arguments) {
+                $Arguments.Add([Argument]::new($argument.Arguments, $argument.ValueCount, $argument.Redundant)) | Out-Null;
+            }
+        }
+
+        foreach ($type_value in $ProfileParameters.command) {
+            $TokenContent = $type_value.PSObject.Properties.Value
+            $suffix = if($TokenContent[-1] -eq "="){ $TokenContent[-1] } else { "" }
+            $details = [Argument]::GetArgumentDetails($Arguments, $TokenContent.Substring(0,$TokenContent.length - $suffix.length).ToCharArray())
+
+            $Token = [Token]::new($TokenContent.ToCharArray(), ($null -ne $details) -and ($details.ValueCount -gt 0));
             $Token.Type = $type_value.PSObject.Properties.Name;
             $Tokens.Add($Token) | Out-Null;
 
-            $Token = [Token]::new($type_value.PSObject.Properties.Value.ToCharArray());
+            $Token = [Token]::new($TokenContent.ToCharArray(), ($null -eq $details) -and ($details.ValueCount -gt 0));
             $Token.Type = $type_value.PSObject.Properties.Name;
             $OriginalTokens.Add($Token) | Out-Null;
         }
 
-
-        foreach ($modifier_params in $JSONData.modifiers.PSObject.Properties) {
+        foreach ($modifier_params in $ProfileParameters.modifiers.PSObject.Properties) {
             $ModifierName = $modifier_params.Name -replace "^(?i)regex$", "RegularExpression"; # Regex is a reserved name, hence this rename for the Modifier class
             $Modifier = ($ModifierName -as [type])
 
@@ -230,7 +258,7 @@ function Invoke-ArgFuscator {
             }
 
             # Create dictionary with arguments and values
-            $ModifierArguments = @{InputCommandTokens = [Token[]]$Tokens; AppliesTo = [string[]]@() };
+            $ModifierArguments = @{InputCommandTokens = [Token[]]$Tokens; AppliesTo = [string[]]@(); Arguments = [Argument[]]$Arguments };
             foreach ($param in $modifier_params.Value.PSObject.Properties) {
                 if ($ModifierArguments.ContainsKey($param.Name)) {
                     $ModifierArguments[$param.Name] = $param.Value;
