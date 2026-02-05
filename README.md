@@ -11,21 +11,21 @@ Invoke-ArgFuscator is an open-source, cross-platform PowerShell module that help
 
 ## Summary
 
-Command-Line Obfuscation ([T1027.010](https://attack.mitre.org/techniques/T1027/010/)) is the masquerading of a command's true intention through the manipulation of a process' command line. Across [Windows](https://www.wietzebeukema.nl/blog/windows-command-line-obfuscation), Linux and MacOS, many applications parse passed command-line arguments in unexpected ways, leading to situations in which insertion, deletion and/or subsitution of certain characters does not change the program's execution flow. Successful command-line obfuscation is likely to frustrate defensive measures such as AV and EDR software, in some cases completely bypassing detection altogether.
+Command-Line Obfuscation ([T1027.010](https://attack.mitre.org/techniques/T1027/010/)) is the masquerading of a command's true intention through the manipulation of a process' command line. Across [Windows](https://www.wietzebeukema.nl/blog/windows-command-line-obfuscation), Linux, and macOS, many applications parse passed command-line arguments in unexpected ways, leading to situations in which insertion, deletion, and/or substitution of certain characters does not change the programme's execution flow. Successful command-line obfuscation is likely to frustrate defensive measures such as AV and EDR software, in some cases completely bypassing detection altogether.
 
-Although previous research has highlighted the risks of command-line obfuscation, mostly with anecdotal examples of vulnerable (system-native) applications, there is an knowledge vacuum surrounding this technique. This project aims to overcome this by providing a centralised resource that documents and demonstrates various command-line obfuscation techniques, and records the subsceptability of popular applications for each.
+Although previous research has highlighted the risks of command-line obfuscation, mostly with anecdotal examples of vulnerable (system-native) applications, there is a knowledge vacuum surrounding this technique. This project aims to overcome this by providing a centralised resource that documents and demonstrates various command-line obfuscation techniques, and records the susceptibility of popular applications for each.
 
 ## Usage
 
 ### Prerequisites
 
-This module works on any operating system supporting PowerShell/pwsh; this includes Windows, macOS and Linux.
+This module works on any operating system supporting PowerShell/pwsh; this includes Windows, macOS, and Linux.
 
 * **Windows**: If you are using a Microsoft-supported version of Windows, such as Windows 10 or Windows 11, PowerShell will be pre-installed on your device.
 * **macOS**: If you have `brew` preinstalled, run `brew install powershell/tap/powershell` to install the latest version of PowerShell. For alternative installation options, refer to Microsoft's [documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos).
 * **Linux**: Refer to Microsoft's [documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux) to see how you can install PowerShell on your distribution.
 
-### Installation & usage
+### Installation & Usage
 
 1. The simplest way to install this module is via the following PowerShell command:
 
