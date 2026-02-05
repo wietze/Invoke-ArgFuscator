@@ -5,7 +5,7 @@
 
 # Invoke-ArgFuscator
 
-Invoke-ArgFuscator is an open-source, cross-platform PowerShell module that helps generate obfuscated command-lines for common system-native executables.
+Invoke-ArgFuscator is an open-source, cross-platform PowerShell module that helps generate obfuscated command-lines for common system-native executables across Windows, Linux, and macOS.
 
 👉 **Use the interactive version of ArgFuscator on [ArgFuscator.net](https://argfuscator.net/)** 🚀
 
@@ -111,7 +111,7 @@ Invoke-ArgFuscator -Command $Command -Platform $Platform -n $n
 
 with
 
-* `$InputFile` a `string` containing a (relative/absolute) file path to the model file, and `$n` an `integer` greater than 0 for the number of obfuscated command-line equivalents that should be produced (optional); or,
+* `$InputFile` a `string` containing a (relative/absolute) file path to the model file, `$Profile` an integer greater than or equal to 0 representing the profile index within the provided file path that should be targeted (optional), and `$n` an `integer` greater than 0 for the number of obfuscated command-line equivalents that should be produced (optional); or,
 * `$Command` a `string` containing the command line you wish to obfuscate, `$Platform` a `string` with the relevant platform (e.g. `windows`, optional), and `$n` an `integer` greater than 0 for the number of obfuscated command-line equivalents that should be produced (optional).
 
 [^1]: These can be generated via [ArgFuscator.net](https://argfuscator.net/) via the 'Download' option, or downloaded from [GitHub](https://github.com/wietze/Argfuscator.net/tree/main/models).

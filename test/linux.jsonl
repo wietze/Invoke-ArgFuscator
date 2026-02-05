@@ -33,7 +33,7 @@
 {"path":"ArgFuscator/models/scp.json", "profileID": 0, "outputCompare": "full", "postCommand": "rm /tmp/mypasswdfile", "wrapperCommand": "$COMMAND 2>&1; cat /tmp/mypasswdfile"}
 {"path":"ArgFuscator/models/sed.json", "profileID": 0, "outputCompare": "full"}
 {"path":"ArgFuscator/models/sftp.json", "profileID": 0, "outputCompare": "full", "postCommand": "rm /tmp/mypasswdfile", "wrapperCommand": "$COMMAND 2>&1; cat /tmp/mypasswdfile"}
-{"path":"ArgFuscator/models/sh.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/dash.json", "profileID": 0, "outputCompare": "full"}
 {"path":"ArgFuscator/models/sort.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "cat /etc/passwd | $COMMAND"}
 {"path":"ArgFuscator/models/ssh.json", "profileID": 0, "outputCompare": "full"}
 {"path":"ArgFuscator/models/strings.json", "profileID": 0, "outputCompare": "full"}

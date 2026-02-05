@@ -11,7 +11,7 @@ using module "Modifiers\Sed.psm1"
 using module "Modifiers\Shorthands.psm1"
 using module "Modifiers\UrlTransformer.psm1"
 
-$OutputEncoding = [ System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
 function Invoke-TokeniseCommand {
     param (
         [string]$InputCommand,
@@ -25,6 +25,7 @@ function Invoke-TokeniseCommand {
     $CommonOptionChars = @('/', '-')
 
     $InQuote = $null
+    $InOptionChar = $null
     [Token[]]$Tokens = @()  # Explicitly type the array as Token[]
     $TokenContent = @()
     $SeenValueChar = $false
@@ -32,11 +33,12 @@ function Invoke-TokeniseCommand {
     for ($i = 0; $i -lt $InputCommand.Length; $i++) {
         if ($TokenContent.Count -eq 0) { $SeenValueChar = $false }
         $Char = $InputCommand[$i].ToString()
+        $InOptionChar = if ($TokenContent.Length -eq 0 -and ($Modifier.CommonOptionChars -contains $Char)) { $true } else { $InOptionChar }
 
         if (($null -eq $InQuote) -and (
                 ($Char -eq $SeparationChar) -or (
                     (-not $SeenValueChar) -and
-                        ((($i -eq $InputCommand.Length) -or (-not @('\\', '/') -contains $InputCommand[$i + 1])) -and
+                    ((($i -eq $InputCommand.Length) -or (-not @('\\', '/') -contains $InputCommand[$i + 1])) -and
                     $ValueChars.contains($Char))
                 )
             )) {
@@ -49,6 +51,7 @@ function Invoke-TokeniseCommand {
                 $Tokens += [Token]::new($TokenContent, ($null -eq $details) -and ($details.ValueCount -gt 0))
             }
             $TokenContent = @()
+            $InOptionChar = $false
         }
         else {
             if (($null -ne $InQuote) -and ($Char -eq $InQuote)) {
@@ -59,6 +62,23 @@ function Invoke-TokeniseCommand {
             }
 
             $TokenContent += $Char
+
+            # Check for known argument match
+            $a = [Argument]::GetArgumentDetails($Arguments, $TokenContent)
+
+            if ($TokenContent.Length -eq 2 -and $null -ne $a) {
+                # Create existing find as new token
+                $Tokens += [Token]::new($TokenContent, $a.ValueCount -gt 0)
+
+                # Reset TokenContent and InOptionChar
+                $TokenContent = @()
+                $InOptionChar = $false
+
+                # If we are NOT expecting a value and the next character is not a separation char, it will be another command
+                if ($a.ValueCount -eq 0 -and (($i + 1) -lt $InputCommand.Length -and $InputCommand[$i + 1] -ne $SeparationChar)) {
+                    $TokenContent += $Tokens[$Tokens.Count - 1].ToString()[0]
+                }
+            }
         }
         $SeenValueChar = $SeenValueChar -or ($ValueChars | Where-Object { $_ -eq $Char })
     }
@@ -130,11 +150,11 @@ function Invoke-ArgFuscator {
         [Parameter(ParameterSetName = "FromCommand")]
         [ValidateScript({
                 $platformPath = Join-Path $PSScriptRoot "models" $_
-                if (Test-Path $platformPath -PathType Container) {
+                if ($_ -eq 'windows' -or $_ -eq 'linux' -or $_ -eq 'mac') {
                     return $true
                 }
                 else {
-                    throw "Platform '$_' not found. Make sure the platform directory exists in the models folder ($platformPath)."
+                    throw "Platform '$_' not found. Choose from 'windows', 'linux' and 'mac'."
                 }
             })]
         [string]$Platform = "windows",
@@ -180,18 +200,27 @@ function Invoke-ArgFuscator {
 
     if ($PSCmdlet.ParameterSetName -eq "FromFile") {
         $JSONData = Get-Content -Encoding UTF8 -Path $InputFile | ConvertFrom-Json
+        if($Profile -gt $JSONData.profiles.length-1){
+            throw "Profile $Profile could not be found"
+        }
+        $JSONData = $JSONData.profiles[$Profile].parameters
     }
     else {
-        $CommandData = Invoke-TokeniseCommand $() $Command
+        $CommandData = Invoke-TokeniseCommand $Command @()
         $cmd = $CommandData[0]["command"]
-        $filePath = Join-Path -Path $PSScriptRoot -ChildPath "\models\$Platform\$cmd.json"
+        $filePath = Join-Path -Path $PSScriptRoot -ChildPath "\models\$cmd.json"
         if (Test-Path $filePath) {
             $ModelData = Get-Content -Encoding UTF8 -Path $filePath | ConvertFrom-Json
+            $ProfileData = $ModelData.profiles | Where-Object { $_.platform -eq $platform } | Select-Object -First 1
+            if($null -eq $ProfileData){
+                throw "Could not find profile for platform '$platform'. Specify a different one using option -Platform or try a different command."
+            }
+            $CommandData = Invoke-TokeniseCommand $Command ($ProfileData.parameters.arguments | ForEach-Object { [Argument]::new($_.Arguments, $_.ValueCount, $_.Redundant) })
             # Create a PSCustomObject that matches the expected format
             $JSONData = [PSCustomObject]@{
                 "command"   = ($CommandData | ConvertTo-JSON | ConvertFrom-Json)
-                "modifiers" = $ModelData.modifiers
-                "arguments" = $ModelData.arguments
+                "modifiers" = $ProfileData.parameters.modifiers
+                "arguments" = $ProfileData.parameters.arguments
             }
         }
         else {
@@ -206,10 +235,8 @@ function Invoke-ArgFuscator {
         $Arguments = [System.Collections.ArrayList]@();
 
         # Select the right profile
-        $ProfileData = $JSONData.profiles[$Profile]
-        $ProfileParameters = $ProfileData.parameters
+        $ProfileParameters = $JSONData
         Write-Debug "Assuming version $($ProfileData.executableVersion) on $($ProfileData.operatingSystem) $($ProfileData.operatingSystemVersion)."
-
         # Ensure a command is provided
         if (!(Get-Member -InputObject $ProfileParameters -name "command" -Membertype Properties) -or ($ProfileParameters.command.Length -le 0)) {
             if ($Interactive.IsPresent) {
@@ -217,7 +244,7 @@ function Invoke-ArgFuscator {
                 while (($null -eq $CommandInput) -or ($CommandInput.Length -eq 0)) {
                     $CommandInput = Read-Host "Enter your command here"
                 }
-                $ProfileParameters.command = (Invoke-TokeniseCommand $ProfileParameters.arguments $CommandInput | ConvertTo-JSON | ConvertFrom-Json)
+                $ProfileParameters.command = (Invoke-TokeniseCommand $CommandInput ($ProfileParameters.parameters.arguments | ForEach-Object { [Argument]::new($_.Arguments, $_.ValueCount, $_.Redundant) }) | ConvertTo-JSON | ConvertFrom-Json)
             }
             else {
                 Write-Error "No command was specified in the provided JSON file." -RecommendedAction "Either define a tokenised command in your file, or use interactive mode by specifying -Interactive." -Category InvalidData
@@ -233,8 +260,8 @@ function Invoke-ArgFuscator {
 
         foreach ($type_value in $ProfileParameters.command) {
             $TokenContent = $type_value.PSObject.Properties.Value
-            $suffix = if($TokenContent[-1] -eq "="){ $TokenContent[-1] } else { "" }
-            $details = [Argument]::GetArgumentDetails($Arguments, $TokenContent.Substring(0,$TokenContent.length - $suffix.length).ToCharArray())
+            $suffix = if ($TokenContent[-1] -eq "=") { $TokenContent[-1] } else { "" }
+            $details = [Argument]::GetArgumentDetails($Arguments, $TokenContent.Substring(0, $TokenContent.length - $suffix.length).ToCharArray())
 
             $Token = [Token]::new($TokenContent.ToCharArray(), ($null -ne $details) -and ($details.ValueCount -gt 0));
             $Token.Type = $type_value.PSObject.Properties.Name;
