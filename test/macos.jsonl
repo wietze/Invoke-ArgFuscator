@@ -1,0 +1,64 @@
+{"path":"ArgFuscator/models/arp.json", "profileID": 2, "outputCompare": "full", "wrapperCommand": "$COMMAND 2>&1; arp -a", "postCommand": "sudo arp -d 192.168.64.99 > /dev/null"}
+{"path":"ArgFuscator/models/base64.json", "profileID": 1, "outputCompare": "full", "wrapperCommand": "echo QXJnRnVzY2F0b3I= | $COMMAND"}
+{"path":"ArgFuscator/models/caffeinate.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/chflags.json", "profileID": 0, "outputCompare": "full", "preCommand": "touch /tmp/ArgFuscator.txt", "postCommand": "rm /tmp/ArgFuscator.txt"}
+{"path":"ArgFuscator/models/chmod.json", "profileID": 1, "outputCompare": "full", "preCommand": "touch /tmp/test", "postCommand": "rm /tmp/test", "wrapperCommand": "$COMMAND > /dev/null; stat -f '%Lp' /tmp/test"}
+{"path":"ArgFuscator/models/chown.json", "profileID": 1, "outputCompare": "full", "preCommand": "touch /tmp/test", "postCommand": "rm /tmp/test", "wrapperCommand": "$COMMAND 2>&1 1>/dev/null && stat -f '%u %g' /tmp/test"}
+{"path":"ArgFuscator/models/cp.json", "profileID": 1, "outputCompare": "full", "preCommand": "echo 'argfuscator' > /tmp/test1.txt", "postCommand": "rm /tmp/test*.txt", "wrapperCommand": "$COMMAND >/dev/null; cat /tmp/test*.txt"}
+{"path":"ArgFuscator/models/cut.json", "profileID": 1, "outputCompare": "full"}
+{"path":"ArgFuscator/models/date.json", "profileID": 1, "outputCompare": "full"}
+{"path":"ArgFuscator/models/defaults.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/dig.json", "profileID": 1, "outputCompare": "full", "wrapperCommand": "$COMMAND | sort"}
+{"path":"ArgFuscator/models/ditto.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/dns-sd.json", "profileID": 0, "outputCompare": "exitCode"}
+{"path":"ArgFuscator/models/dscacheutil.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/dsconfigad.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/dsexport.json", "profileID": 0, "outputCompare": "full", "postCommand": "rm /tmp/local_users.txt"}
+{"path":"ArgFuscator/models/expand.json", "profileID": 2, "outputCompare": "full", "wrapperCommand": "echo -e \"hello\t\t\tworld\" | $COMMAND"}
+{"path":"ArgFuscator/models/GetFileInfo.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/hdiutil.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "$COMMAND 2>&1 1>/dev/null; ls /tmp/ArgFuscator.dmg", "postCommand": "rm /tmp/ArgFuscator.dmg"}
+{"path":"ArgFuscator/models/head.json", "profileID": 1, "outputCompare": "full", "wrapperCommand": "$COMMAND | sort"}
+{"path":"ArgFuscator/models/ioreg.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/kextstat.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/last.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/launchctl.json", "profileID": 0, "outputCompare": "full", "postCommand": "launchctl unload /Library/LaunchAgents/com.redhat.spice.vdagent.plist >/dev/null  2>&1"}
+{"path":"ArgFuscator/models/ln.json", "profileID": 1, "outputCompare": "full", "preCommand": "touch /tmp/hi", "postCommand": "rm /tmp/hi test.txt", "wrapperCommand": "$COMMAND >/dev/null; realpath $(readlink test.txt)"}
+{"path":"ArgFuscator/models/log.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/mdls.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/mktemp.json", "profileID": 0, "outputCompare": "exitCode"}
+{"path":"ArgFuscator/models/mount.json", "profileID": 1, "outputCompare": "full", "preCommand": "mkdir -p /tmp/targetMount", "postCommand": "umount /tmp/targetMount", "wrapperCommand": "$COMMAND 2>&1; mount | grep targetMount"}
+{"path":"ArgFuscator/models/mv.json", "profileID": 1, "outputCompare": "full", "preCommand": "echo 'argfuscator' > /tmp/test1.txt", "postCommand": "rm /tmp/test*.txt", "wrapperCommand": "$COMMAND >/dev/null; ls /tmp/test*.txt"}
+{"path":"ArgFuscator/models/nc.json", "profileID": 1, "outputCompare": "exitcode"}
+{"path":"ArgFuscator/models/networksetup.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/nscurl.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "$COMMAND | sed -E 's/(Date:).+/\\1/g'"}
+{"path":"ArgFuscator/models/nvram.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/open.json", "profileID": 0, "outputCompare": "full", "postCommand": "killall Calculator"}
+{"path":"ArgFuscator/models/osacompile.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "$COMMAND 2>&1; osascript /tmp/ArgFuscatorOsa", "postCommand": "rm /tmp/ArgFuscatorOsa"}
+{"path":"ArgFuscator/models/osascript.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/pbcopy.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "echo 'ArgFuscator' | $COMMAND ; pbpaste", "postCommand": "echo '' | pbcopy"}
+{"path":"ArgFuscator/models/pbpaste.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo 'ArgFuscator' | pbcopy", "postCommand": "echo '' | pbcopy"}
+{"path":"ArgFuscator/models/ping.json", "profileID": 1, "outputCompare": "full", "wrapperCommand": "$COMMAND | grep 'packets transmitted' | sed 's/ [0-9]\\+ms$//'"}
+{"path":"ArgFuscator/models/profiles.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/say.json", "profileID": 0, "outputCompare": "full", "preCommand":"echo 'ArgFuscator' > /tmp/test.txt", "postCommand": "rm /tmp/test.txt"}
+{"path":"ArgFuscator/models/screencapture.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "$COMMAND 2>&1; cat /tmp/temp.jpg | base64", "postCommand": "rm /tmp/temp.jpg"}
+{"path":"ArgFuscator/models/scutil.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/security.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/sed.json", "profileID": 1, "outputCompare": "full"}
+{"path":"ArgFuscator/models/SetFile.json", "profileID": 0, "outputCompare": "full", "preCommand":"touch /tmp/ArgFuscator.txt", "postCommand":"rm /tmp/ArgFuscator.txt", "wrapperCommand": "$COMMAND 2>&1; ls -la /tmp/ArgFuscator.txt"}
+{"path":"ArgFuscator/models/softwareupdate.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/spctl.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/ssh-keygen.json", "profileID": 0, "outputCompare": "full", "postCommand": "rm /tmp/test"}
+{"path":"ArgFuscator/models/streamzip.json", "profileID": 0, "outputCompare": "length", "wrapperCommand": "echo 'ArgFuscator' | $COMMAND"}
+{"path":"ArgFuscator/models/strings.json", "profileID": 1, "outputCompare": "full"}
+{"path":"ArgFuscator/models/sw_vers.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/sysctl.json", "profileID": 0, "outputCompare": "length"}
+{"path":"ArgFuscator/models/system_profiler.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/systemsetup.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "$COMMAND | sort"}
+{"path":"ArgFuscator/models/tail.json", "profileID": 1, "outputCompare": "full", "wrapperCommand": "$COMMAND | sort"}
+{"path":"ArgFuscator/models/tar.json", "profileID": 2, "outputCompare": "exitcode", "preCommand": "echo 'Hi' > /tmp/ArgFuscator.txt", "postCommand": "rm /tmp/ArgFuscator.txt"}
+{"path":"ArgFuscator/models/tmutil.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/uniq.json", "profileID": 1, "outputCompare": "full", "wrapperCommand": "cat /etc/passwd | $COMMAND"}
+{"path":"ArgFuscator/models/wc.json", "profileID": 1, "outputCompare": "exitcode"}
+{"path":"ArgFuscator/models/whois.json", "profileID": 1, "outputCompare": "full"}
+{"path":"ArgFuscator/models/xattr.json", "profileID": 0, "outputCompare": "full", "preCommand": "touch /tmp/ArgFuscator.txt", "postCommand": "rm /tmp/ArgFuscator.txt"}
+{"path":"ArgFuscator/models/zsh.json", "profileID": 0, "outputCompare": "full"}

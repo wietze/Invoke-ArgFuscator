@@ -1,12 +1,13 @@
 using module "..\Types\Modifier.psm1"
 using module "..\Types\Token.psm1"
+using module "..\Types\Argument.psm1"
 
 class CharacterInsertion : Modifier {
     [float]$Probability;
     [string[]]$Characters;
     [int]$Offset;
 
-    CharacterInsertion([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability, [string[]]$Characters, [int]$Offset) : base($InputCommandTokens, $AppliesTo, $Probability) {
+    CharacterInsertion([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [Argument[]]$Arguments, [float]$Probability, [string[]]$Characters, [int]$Offset) : base($InputCommandTokens, $AppliesTo, $Arguments, $Probability) {
         $this.Characters = $Characters;
         $this.Offset = $Offset;
     }

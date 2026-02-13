@@ -1,0 +1,68 @@
+{"path":"ArgFuscator/models/addinutil.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/arp.json", "profileID": 1, "outputCompare": "full"}
+{"path":"ArgFuscator/models/aspnet_compiler.json", "profileID": 0, "outputCompare": "full", "preCommand": "mkdir c:\\windows\\temp\\WebDir & mkdir c:\\windows\\temp\\WebDir\\App_Code c:\\windows\\temp\\webdir\\Bin & echo ^<?xml version=\"1.0\"?^>^<configuration^>^<appSettings/^>^<connectionStrings/^>^<system.web^>^<compilation debug=\"true\"^>^<buildProviders^>^<add extension=\".xml\" type=\"BringYourOwnBuilder.GoHaveFun, BringYourOwnBuilder\"/^>^</buildProviders^>^</compilation^>^</system.web^>^</configuration^>> c:/windows/temp/webdir/Web.config & echo ^<?xml version=\"1.0\" encoding=\"utf-8\" ?^>> c:/windows/temp/WebDir/app_code/cpl.xml", "postCommand": "rd /s /q c:\\windows\\temp\\webdir", "expectedStatusCode": 1}
+{"path":"ArgFuscator/models/auditpol.json", "profileID": 0, "outputCompare": "full", "postCommand": "del c:\\windows\\temp\\file.csv"}
+{"path":"ArgFuscator/models/bcdedit.json", "profileID": 0, "outputCompare": "full", "postCommand": "del c:\\windows\\temp\\output.csv"}
+{"path":"ArgFuscator/models/bitsadmin.json", "profileID": 0, "outputCompare": "exitCode", "preCommand": "bitsadmin /create downloadjob > NUL", "postCommand": "bitsadmin /reset > NUL"}
+{"path":"ArgFuscator/models/cacls.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "echo y | $COMMAND", "preCommand": "echo hi > c:\\windows\\temp\\file.ext", "postCommand": "del c:\\windows\\temp\\file.ext"}
+{"path":"ArgFuscator/models/certreq.json", "profileID": 1, "outputCompare": "length", "preCommand": "echo hi > c:\\windows\\temp\\file.ext", "postCommand": "del c:\\windows\\temp\\file.ext", "expectedStatusCode":-2145844843}
+{"path":"ArgFuscator/models/certutil.json", "profileID": 0, "outputCompare": "full", "postCommand": "del output.ext"}
+{"path":"ArgFuscator/models/cipher.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo hi > c:\\windows\\temp\\file.ext & cipher /k > NUL", "postCommand": "del c:\\windows\\temp\\file.ext"}
+{"path":"ArgFuscator/models/cmdkey.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo hi > c:\\windows\\temp\\file.inf", "postCommand": "del c:\\windows\\temp\\file.inf"}
+{"path":"ArgFuscator/models/cmstp.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/csc.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo using System; class Program { static void Main() { Console.Write(\"Hello, World!\"); } } > file.cs", "postCommand": "del  file.cs  output.dll"}
+{"path":"ArgFuscator/models/cscript.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo WScript.Echo \"ArgFuscator\">c:\\windows\\temp\\file.txt", "postCommand":"del c:\\windows\\temp\\file.txt"}
+{"path":"ArgFuscator/models/curl.json", "profileID": 1, "outputCompare": "exitCode", "postCommand": "del output.ext"}
+{"path":"ArgFuscator/models/dism.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/expand.json", "profileID": 1, "outputCompare": "exitCode", "preCommand":"echo hi > c:\\windows\\temp\\file.txt & makecab c:\\windows\\temp\\file.txt c:\\windows\\temp\\input.cab > NUL", "postCommand":"del c:\\windows\\temp\\input.cab c:\\windows\\temp\\file.txt"}
+{"path":"ArgFuscator/models/extrac32.json", "profileID": 0, "outputCompare": "length", "wrapperCommand": "$COMMAND > NUL & type c:\\windows\\temp\\OutpUt.txt", "preCommand":"echo hi > c:\\windows\\temp\\file.txt && makecab c:\\windows\\temp\\file.txt c:\\windows\\temp\\input.txt > NUL", "postCommand":"del c:\\windows\\temp\\input.txt c:\\windows\\temp\\file.txt c:\\windows\\temp\\output.txt"}
+{"path":"ArgFuscator/models/findstr.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo hello some_string bye > c:\\windows\\temp\\some_file.ext", "postCommand": "del c:\\windows\\temp\\some_file.ext"}
+{"path":"ArgFuscator/models/fltmc.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/forfiles.json", "profileID": 0, "outputCompare": "full", "postCommand":"timeout /t 2 >NUL & taskkill /IM calculatorapp.exe /F >NUL"}
+{"path":"ArgFuscator/models/fsutil.json", "profileID": 0, "outputCompare": "full", "postCommand": "del c:\\windows\\temp\\fsutil.txt"}
+{"path":"ArgFuscator/models/ftp.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo help > c:\\windows\\temp\\ftp_commands.txt & echo bye >> c:\\windows\\temp\\ftp_commands.txt", "postCommand": "del c:\\windows\\temp\\ftp_commands.txt"}
+{"path":"ArgFuscator/models/icacls.json", "profileID": 0, "outputCompare": "exitCode","wrapperCommand": "echo y | $COMMAND", "preCommand": "echo hi > c:\\windows\\temp\\file.ext", "postCommand": "del c:\\windows\\temp\\file.ext"}
+{"path":"ArgFuscator/models/ipconfig.json", "profileID": 0, "outputCompare": "length"}
+{"path":"ArgFuscator/models/jsc.json", "profileID": 0, "outputCompare": "full","outputCompare": "full", "wrapCommand": "$COMMAND & c:\\windows\\temp\\file.exe", "preCommand": "echo print(\"Hello, World!\"); > c:\\windows\\temp\\file.js", "postCommand": "del c:\\windows\\temp\\file.js c:\\windows\\temp\\file.exe"}
+{"path":"ArgFuscator/models/makecab.json", "profileID": 0, "outputCompare": "exitCode", "postCommand": "del c:\\windows\\temp\\output.cab", "preCommand": "echo hey ArgFuscator > c:\\windows\\temp\\file.cs", "postCommand": "del c:\\windows\\temp\\file.cs"}
+{"path":"ArgFuscator/models/msbuild.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo ^<Project ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"^>^<Target Name=\"Hello\"^>^<Program /^>^</Target^>^<UsingTask TaskName=\"Program\" TaskFactory=\"CodeTaskFactory\" AssemblyFile=\"C:\\Windows\\Microsoft.Net\\Framework\\v4.0.30319\\Microsoft.Build.Tasks.v4.0.dll\"^>^<Task^>^<Code Type=\"Class\" Language=\"cs\"^>^<![CDATA[using System;using System.Runtime.InteropServices;using Microsoft.Build.Framework;using Microsoft.Build.Utilities;public class Program : Task, ITask{private static UInt32 MEM_COMMIT=0x1000;private static UInt32 PAGE_EXECUTE_READWRITE=0x40;[DllImport(\"kernel32\")]private static extern UInt32 VirtualAlloc(UInt32 lpStartAddr,UInt32 size,UInt32 flAllocationType,UInt32 flProtect);[DllImport(\"kernel32\")]private static extern IntPtr CreateThread(UInt32 lpThreadAttributes,UInt32 dwStackSize,UInt32 lpStartAddress,IntPtr param,UInt32 dwCreationFlags,ref UInt32 lpThreadId);[DllImport(\"kernel32\")]private static extern UInt32 WaitForSingleObject(IntPtr hHandle,UInt32 dwMilliseconds);public override bool Execute(){Console.Write(\"Hey from ArgFuscator\");return true;}}]]^>^</Code^>^</Task^>^</UsingTask^>^</Project^> > c:\\windows\\temp\\test.csproj", "postCommand": "del c:\\windows\\temp\\test.csproj"}
+{"path":"ArgFuscator/models/msiexec.json", "profileID": 0, "outputCompare": "length", "expectedStatusCode": 1619}
+{"path":"ArgFuscator/models/nbtstat.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/net.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/netstat.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/nltest.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/nslookup.json", "profileID": 0, "outputCompare": "full", "wrapperCommand":"$COMMAND | sort"}
+{"path":"ArgFuscator/models/ping.json", "profileID": 2, "outputCompare": "full"}
+{"path":"ArgFuscator/models/pnputil.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/netsh.json", "profileID": 0, "outputCompare": "full", "preCommand": "curl -Lo c:\\windows\\temp\\file.dll https://github.com/outflanknl/NetshHelperBeacon/raw/refs/heads/master/x64/Release/NetshHelperBeacon.dll 2>NUL", "postCommand": "netsh delete helper c:\\windows\\temp\\file.dll 2> NUL & del c:\\windows\\temp\\file.dll & taskkill /IM calculatorapp.exe /F >NUL"}
+{"path":"ArgFuscator/models/powershell.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/query.json", "profileID": 0, "outputCompare": "full", "expectedStatusCode": 1}
+{"path":"ArgFuscator/models/reg.json", "profileID": 0, "outputCompare": "full","postCommand": "del c:\\windows\\temp\\output.reg"}
+{"path":"ArgFuscator/models/regedit.json", "profileID": 0, "outputCompare": "full", "postCommand": "del c:\\windows\\temp\\output.reg"}
+{"path":"ArgFuscator/models/regsvr32.json", "profileID": 0, "outputCompare": "full", "preCommand": "copy c:\\windows\\system32\\vbscript.dll c:\\windows\\temp\\file.dll > NUL", "postCommand": "del c:\\windows\\temp\\file.dll"}
+{"path":"ArgFuscator/models/robocopy.json", "profileID": 0, "outputCompare": "length", "preCommand": "echo hi > c:\\windows\\temp\\test1", "postCommand": "del c:\\windows\\temp\\test1 c:\\windows\\temp\\test2"}
+{"path":"ArgFuscator/models/route.json", "profileID": 0, "outputCompare": "full", "postCommand": "route delete 127.0.0.0 > NUL"}
+{"path":"ArgFuscator/models/rpcping.json", "profileID": 0, "outputCompare": "exitCode"}
+{"path":"ArgFuscator/models/runas.json", "profileID": 0, "outputCompare": "full", "wrapperCommand":"echo password | $COMMAND", "postCommand":"timeout /t 2 >NUL & taskkill /IM calculatorapp.exe /F >NUL"}
+{"path":"ArgFuscator/models/driverquery.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/sc.json", "wrapperCommand": "$COMMAND | more", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/schtasks.json", "profileID": 0, "outputCompare": "length"}
+{"path":"ArgFuscator/models/secedit.json", "profileID": 0, "outputCompare": "full",  "postCommand": "del c:\\windows\\temp\\out2.txt"}
+{"path":"ArgFuscator/models/takeown.json", "profileID": 0, "outputCompare": "full","preCommand": "echo hi > c:\\windows\\temp\\file.ext", "postCommand": "del c:\\windows\\temp\\file.ext"}
+{"path":"ArgFuscator/models/tar.json", "profileID": 1, "outputCompare": "full","preCommand": "echo hi > c:\\windows\\temp\\file.ext", "postCommand": "del c:\\windows\\temp\\file.ext output.ext"}
+{"path":"ArgFuscator/models/taskkill.json", "profileID": 0, "outputCompare": "exitCode", "preCommand": "start calc.exe"}
+{"path":"ArgFuscator/models/vaultcmd.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/tasklist.json", "profileID": 0, "outputCompare": "exitCode"}
+{"path":"ArgFuscator/models/vbc.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo Module Minimal > c:\\windows\\temp\\file.vbs & echo     Sub Main() >> c:\\windows\\temp\\file.vbs & echo         Console.WriteLine(\"Hello, World!\") >> c:\\windows\\temp\\file.vbs &echo     End Sub >> c:\\windows\\temp\\file.vbs & echo End Module >> c:\\windows\\temp\\file.vbs", "postCommand":"del c:\\windows\\temp\\file.vb c:\\windows\\temp\\file.exe"}
+{"path":"ArgFuscator/models/w32tm.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/wevtutil.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/where.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo hi > c:\\windows\\temp\\file.ext", "postCommand": "del c:\\windows\\temp\\file.ext"}
+{"path":"ArgFuscator/models/whoami.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/winget.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo hi > c:\\windows\\temp\\file.ext", "postCommand": "del c:\\windows\\temp\\file.ext"}
+{"path":"ArgFuscator/models/wscript.json", "profileID": 0, "outputCompare": "full","preCommand": "echo Set fso = CreateObject(\"Scripting.FileSystemObject\"): Set file = fso.CreateTextFile(\"C:\\Windows\\Temp\\hello.txt\", True): file.WriteLine(\"Hello, World!\"): file.Close>c:\\windows\\temp\\file.txt","wrapperCommand":"$COMMAND & type C:\\windows\\temp\\hello.txt", "postCommand":"del c:\\windows\\temp\\file.txt c:\\windows\\temp\\hello.txt"}
+{"path":"ArgFuscator/models/xcopy.json", "profileID": 0, "outputCompare": "full","wrapperCommand": "echo F | $COMMAND", "preCommand": "echo hi > c:\\windows\\temp\\file.ext", "postCommand": "del c:\\windows\\temp\\file.ext c:\\windows\\temp\\file2.ext"}
+{"path":"ArgFuscator/models/at.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/adfind.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/procdump.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/psexec.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/wmic.json", "profileID": 0, "outputCompare": "full"}

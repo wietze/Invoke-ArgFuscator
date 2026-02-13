@@ -1,11 +1,12 @@
 using module "..\Types\Modifier.psm1"
 using module "..\Types\Token.psm1"
+using module "..\Types\Argument.psm1"
 
 class QuoteInsertion : Modifier {
     [float]$Probability;
     static [char]$QuoteChar = '"';
 
-    QuoteInsertion([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability) : base($InputCommandTokens, $AppliesTo, $Probability) {
+    QuoteInsertion([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [Argument[]]$Arguments, [float]$Probability) : base($InputCommandTokens, $AppliesTo, $Arguments, $Probability) {
 
     }
 

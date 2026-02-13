@@ -1,10 +1,11 @@
 using module "..\Types\Modifier.psm1"
 using module "..\Types\Token.psm1"
+using module "..\Types\Argument.psm1"
 
 class RandomCase : Modifier {
     [float]$Probability;
 
-    RandomCase([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [float]$Probability) : base($InputCommandTokens, $AppliesTo, $Probability) {
+    RandomCase([Token[]]$InputCommandTokens, [string[]]$AppliesTo, [Argument[]]$Arguments, [float]$Probability) : base($InputCommandTokens, $AppliesTo, $Arguments, $Probability) {
     }
 
     [void]GenerateOutput() {

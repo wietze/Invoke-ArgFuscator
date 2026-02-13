@@ -1,0 +1,52 @@
+{"path":"ArgFuscator/models/apt.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/arp.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/at.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo whoami > /tmp/whoami.at", "postCommand": "atq | awk ''{print `$1}'' | xargs atrm; rm /tmp/whoami.at", "wrapperCommand": "$COMMAND 2>&1 | sed 's/^job [0-9]\\+ //'"}
+{"path":"ArgFuscator/models/base64.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "echo QXJnRnVzY2F0b3I= | $COMMAND"}
+{"path":"ArgFuscator/models/bash.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/chmod.json", "profileID": 0, "outputCompare": "full", "preCommand": "touch /tmp/test", "postCommand": "rm /tmp/test", "wrapperCommand": "$COMMAND > /dev/null; stat -c '%a' /tmp/test"}
+{"path":"ArgFuscator/models/chown.json", "profileID": 0, "outputCompare": "full", "preCommand": "touch /tmp/test", "postCommand": "rm /tmp/test", "wrapperCommand": "$COMMAND > /dev/null && stat -c '%u %G' /tmp/test"}
+{"path":"ArgFuscator/models/cp.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo 'argfuscator' > /tmp/test1.txt", "postCommand": "rm /tmp/test*.txt", "wrapperCommand": "$COMMAND >/dev/null; cat /tmp/test*.txt"}
+{"path":"ArgFuscator/models/curl.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/cut.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/date.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/dig.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "$COMMAND | sort"}
+{"path":"ArgFuscator/models/dpkg.json", "profileID": 0, "outputCompare": "length", "preCommand": "tmp=$(mktemp -d /tmp/m.XXXXXX) && mkdir -p \"$tmp/DEBIAN\" && printf \"Package: m\\nVersion: 1\\nArchitecture: all\\nMaintainer: m\\nDescription: m\\n\" > \"$tmp/DEBIAN/control\" && dpkg-deb --build \"$tmp\" /tmp/argfuscator.deb >/dev/null && rm -rf \"$tmp\""}
+{"path":"ArgFuscator/models/expand.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "echo -e \"hello\t\t\tworld\" | $COMMAND"}
+{"path":"ArgFuscator/models/file.json", "profileID": 0, "outputCompare": "exitcode"}
+{"path":"ArgFuscator/models/gcc.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo '#include <stdio.h>; int main(){puts(\"Hello World\");}' > /tmp/gcc.txt", "postCommand": "rm /tmp/gcc.txt /tmp/mybin", "wrapperCommand": "$COMMAND 2>&1; ls /tmp/mybin"}
+{"path":"ArgFuscator/models/grep.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/gzip.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/head.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/id.json", "profileID": 0, "outputCompare": "length"}
+{"path":"ArgFuscator/models/ip.json", "profileID": 0, "outputCompare": "length"}
+{"path":"ArgFuscator/models/journalctl.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/jq.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "echo -e '{\"foo\":\"bar\"}' | $COMMAND"}
+{"path":"ArgFuscator/models/less.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/ln.json", "profileID": 0, "outputCompare": "full", "preCommand": "touch /tmp/hi", "postCommand": "rm /tmp/hi test.txt", "wrapperCommand": "$COMMAND; realpath $(readlink test.txt)"}
+{"path":"ArgFuscator/models/mount.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/mv.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo 'argfuscator' > /tmp/test1.txt", "postCommand": "rm /tmp/test*.txt", "wrapperCommand": "$COMMAND >/dev/null; ls /tmp/test*.txt"}
+{"path":"ArgFuscator/models/nc.json", "profileID": 0, "outputCompare": "exitcode"}
+{"path":"ArgFuscator/models/perl.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/ping.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "$COMMAND | grep 'packets transmitted' | sed 's/ [0-9]\\+ms$//'"}
+{"path":"ArgFuscator/models/python3.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/rsync.json", "profileID": 0, "outputCompare": "exitCode"}
+{"path":"ArgFuscator/models/scp.json", "profileID": 0, "outputCompare": "full", "postCommand": "rm /tmp/mypasswdfile", "wrapperCommand": "$COMMAND 2>&1; cat /tmp/mypasswdfile"}
+{"path":"ArgFuscator/models/sed.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/sftp.json", "profileID": 0, "outputCompare": "full", "postCommand": "rm /tmp/mypasswdfile", "wrapperCommand": "$COMMAND 2>&1; cat /tmp/mypasswdfile"}
+{"path":"ArgFuscator/models/dash.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/sort.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "cat /etc/passwd | $COMMAND"}
+{"path":"ArgFuscator/models/ssh.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/strings.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/sudo.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/systemctl.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/tail.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/tar.json", "profileID": 0, "outputCompare": "exitcode", "preCommand": "echo 'Hi' > /tmp/ArgFuscator.txt", "postCommand": "rm /tmp/ArgFuscator.txt"}
+{"path":"ArgFuscator/models/tcpdump.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "$COMMAND 2>&1 | grep 'packets dropped'"}
+{"path":"ArgFuscator/models/timeout.json", "profileID": 0, "expectedStatusCode": 137, "outputCompare": "full"}
+{"path":"ArgFuscator/models/uniq.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "cat /etc/passwd | $COMMAND"}
+{"path":"ArgFuscator/models/unzip.json", "profileID": 0, "outputCompare": "full", "preCommand": "zip /tmp/ArgFuscator.zip /etc/passwd > /dev/null", "postCommand": "rm /tmp/ArgFuscator.zip"}
+{"path":"ArgFuscator/models/wc.json", "profileID": 0, "outputCompare": "full", "wrapperCommand": "$COMMAND | grep 'total'"}
+{"path":"ArgFuscator/models/wget.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/whois.json", "profileID": 0, "outputCompare": "full"}
+{"path":"ArgFuscator/models/xxd.json", "profileID": 0, "outputCompare": "full", "preCommand": "echo -n '4172674675736361746f72' > /tmp/xxd", "postCommand": "rm /tmp/xxd"}
+{"path":"ArgFuscator/models/zip.json", "profileID": 0, "outputCompare": "full", "postCommand": "rm /tmp/ArgFuscator.zip"}
